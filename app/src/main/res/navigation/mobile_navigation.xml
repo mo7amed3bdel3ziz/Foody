@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/mainFragment">
+
+
+
+    <fragment
+        android:id="@+id/mainFragment"
+        tools:layout="@layout/fragment_main"
+        android:name="com.peter.foody.framework.presentation.main.MainFragment"
+        android:label="البيع" />
+
+    <fragment
+        android:id="@+id/addProductFragment"
+        android:name="com.peter.foody.framework.presentation.addProduct.AddProductFragment"
+        android:label=" اضافة منتج" />
+
+
+    <fragment
+        android:id="@+id/editProductFragment"
+        android:name="com.peter.foody.framework.presentation.editProduct.EditProductFragment"
+        android:label="تعديل سعر منتج" />
+
+    <fragment
+        android:id="@+id/dailyClosingFragment"
+        android:name="com.peter.foody.framework.presentation.closingDay.DailyClosingFragment"
+        android:label="الاقفال" />
+    <fragment
+        android:id="@+id/summaryReportFragment"
+        android:name="com.peter.foody.framework.presentation.main.reports.SummaryReportFragment"
+        android:label="التقارير" />
+
+    <fragment
+        android:id="@+id/salesReportFragment"
+        android:name="com.peter.foody.framework.presentation.reports.SalesReportFragment"
+        android:label="SalesReportFragment" />
+
+    <fragment
+        android:id="@+id/CategoryFragment"
+        android:name="com.peter.foody.framework.presentation.categories.CategoryFragment"
+        android:label="الاصناف" />
+
+
+</navigation>

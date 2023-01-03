@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/mainFragment"
+            android:title=" البيع " />
+        <item
+            android:id="@+id/addProductFragment"
+            android:title=" اضافة منتج" />
+        <item
+            android:id="@+id/editProductFragment"
+            android:title="تعديل سعر منتج" />
+
+
+        <item
+            android:id="@+id/dailyClosingFragment"
+            android:title="الاقفال " />
+
+
+        <item
+            android:id="@+id/summaryReportFragment"
+            android:title=" التقارير " />
+
+        <item android:id="@+id/salesReportFragment"
+            android:title="salesReportFragment"/>
+
+        <item
+            android:id="@+id/CategoryFragment"
+            android:title="الاصناف "
+            />
+
+
+    </group>
+</menu>

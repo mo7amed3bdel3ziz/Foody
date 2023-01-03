@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="3dp"
+        android:background="#75F8F7F7"
+        android:orientation="vertical">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="6dp"
+
+            app:cardCornerRadius="20dp"
+            app:cardElevation="10dp"
+            app:cardMaxElevation="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="70dp">
+
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/ppargar" />
+
+
+                </FrameLayout>
+
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="65dp">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="status" />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:text="@{String.valueOf(data.itemName)}"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="name" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/name"
+                tools:text="cuisines" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:text='@{" السعر  :  "+ String.valueOf(data.selling_Price)}'
+
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/rounded_light_orange_20"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textColor="@color/dark_orange"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                tools:text="discount" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+    <data>
+
+        <variable
+            name="data"
+            type="com.peter.foody.framework.datasource.responses.FoodResponse" />
+    </data>
+</layout>

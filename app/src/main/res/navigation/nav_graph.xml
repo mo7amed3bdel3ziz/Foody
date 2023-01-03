@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/navigateFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        tools:layout="@layout/fragment_main"
+        android:name="com.peter.foody.framework.presentation.main.MainFragment"
+        android:label="البيع" />
+    <fragment
+        android:id="@+id/navigateFragment"
+        android:name="com.peter.foody.framework.presentation.navigate.NavigateFragment"
+        android:label="NavigateFragment" >
+        <action
+            android:id="@+id/action_navigateFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_navigateFragment_to_addProductFragment"
+            app:destination="@id/addProductFragment" />
+        <action
+            android:id="@+id/action_navigateFragment_to_editProductFragment"
+            app:destination="@id/editProductFragment" />
+        <action
+            android:id="@+id/action_navigateFragment_to_salesReportFragment"
+            app:destination="@id/salesReportFragment" />
+        <action
+            android:id="@+id/action_navigateFragment_to_summaryReportFragment"
+            app:destination="@id/summaryReportFragment" />
+        <action
+            android:id="@+id/action_navigateFragment_to_CategoryFragment"
+            app:destination="@id/CategoryFragment" />
+        <action
+            android:id="@+id/action_navigateFragment_to_dailyClosingFragment"
+            app:destination="@id/dailyClosingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addProductFragment"
+        android:name="com.peter.foody.framework.presentation.addProduct.AddProductFragment"
+        android:label="AddProductFragment" />
+    <fragment
+        android:id="@+id/editProductFragment"
+        android:name="com.peter.foody.framework.presentation.editProduct.EditProductFragment"
+        android:label="تعديل سعر منتج" />
+    <fragment
+        android:id="@+id/salesReportFragment"
+        android:name="com.peter.foody.framework.presentation.reports.SalesReportFragment"
+        android:label="SalesReportFragment" />
+    <fragment
+        android:id="@+id/summaryReportFragment"
+        android:name="com.peter.foody.framework.presentation.main.reports.SummaryReportFragment"
+        android:label="التقارير" />
+
+    <fragment
+        android:id="@+id/CategoryFragment"
+        android:name="com.peter.foody.framework.presentation.categories.CategoryFragment"
+        android:label="الاصناف" />
+    <fragment
+        android:id="@+id/dailyClosingFragment"
+        android:name="com.peter.foody.framework.presentation.closingDay.DailyClosingFragment"
+        android:label="الاقفال" />
+
+
+</navigation>
