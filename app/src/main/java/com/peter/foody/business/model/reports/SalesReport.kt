@@ -5,7 +5,7 @@ data class SalesReport(
   var totalQty   :Double,
   var TotalPrice :Double ,
   var BillDate   : String,
-  var items      : String,
+  var items      : String
 
 
     

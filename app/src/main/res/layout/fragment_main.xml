@@ -9,10 +9,9 @@
             name="viewModel"
             type="com.peter.foody.framework.presentation.main.MainViewModel" />
     </data>
-
-<androidx.core.widget.NestedScrollView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
 
 
@@ -21,16 +20,16 @@
             android:background="#05423F3F"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-         >
+            >
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout2"
                 android:layout_width="500dp"
                 android:layout_height="55dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
                 android:background="@drawable/btn_bg_orange"
-                app:layout_constraintEnd_toStartOf="@+id/cardView"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
                 <TextView
@@ -63,24 +62,24 @@
                 android:layout_width="150dp"
                 android:layout_height="62dp"
 
-                android:layout_marginBottom="80dp"
+                android:layout_marginTop="24dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_bg_light_orange"
                 android:gravity="center"
                 android:text="الإنتقال للدفع"
                 android:textColor="@color/white"
                 android:textSize="22dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/cardView"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="6dp"
+                android:layout_marginEnd="32dp"
                 android:background="#fff"
-                android:layout_marginEnd="8dp"
                 android:orientation="horizontal"
+                android:padding="6dp"
                 app:layout_constraintBottom_toTopOf="@+id/offers"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -138,8 +137,8 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView"
-                android:layout_width="500dp"
-                android:layout_height="200dp"
+                android:layout_width="699dp"
+                android:layout_height="213dp"
                 android:layout_marginEnd="4dp"
                 android:elevation="10dp"
                 app:cardCornerRadius="10dp"
@@ -177,8 +176,8 @@
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="124dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="50dp"
                         android:layout_marginTop="16dp"
-                        app:layout_constraintEnd_toStartOf="@+id/textinput_cash"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
@@ -203,9 +202,9 @@
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="124dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
                         android:layout_marginTop="16dp"
-                        android:layout_marginEnd="150dp"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/textinput_deferred"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -284,8 +283,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/offers"
 
-                android:layout_width="500dp"
-                android:layout_height="300dp"
+                android:layout_width="712dp"
+                android:layout_height="283dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="75dp"
                 android:foregroundGravity="center"
@@ -296,11 +295,11 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout"
                 android:layout_width="550dp"
-                android:layout_height="350dp"
+                android:layout_height="440dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
                 android:background="#0F636161"
-                app:layout_constraintEnd_toStartOf="@+id/offers"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="MissingConstraints">
 
@@ -404,5 +403,5 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.core.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 </layout>

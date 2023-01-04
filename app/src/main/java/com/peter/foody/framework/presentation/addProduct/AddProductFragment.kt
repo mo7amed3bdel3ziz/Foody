@@ -21,6 +21,7 @@ class AddProductFragment : Fragment() {
         binding = FragmentAddProductBinding.inflate(inflater)
 
 
+
         return binding.root
     }
 
