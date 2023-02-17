@@ -1,6 +1,7 @@
 package com.peter.foody.framework.datasource.network
 
 import com.peter.foody.business.model.EditItemModel
+import com.peter.foody.business.model.GetItemsModel
 import com.peter.foody.business.model.foods.*
 import com.peter.foody.business.model.reports.SalesReport
 import com.peter.foody.business.usecases.State
@@ -57,6 +58,11 @@ interface FoodAPI {
     @POST("api/Category/EditItem")
     fun EditItemAPI(@Body editItem: EditItemModel):Deferred<TaskAPI<EditItemModel>>
 
+
+    @Headers("Content-Type: application/json")
+    @GET("api/Product/GetItems")
+    fun GetItemsAPI(@Query("catId") catId: String,
+                    @Query("comId") comId:String):Deferred<TaskAPI<GetItemsModel>>
 
 
 }

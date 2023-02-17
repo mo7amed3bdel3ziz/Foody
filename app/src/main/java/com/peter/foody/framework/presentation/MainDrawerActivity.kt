@@ -1,15 +1,15 @@
 package com.peter.foody.framework.presentation
+
 import android.os.Bundle
 import android.view.Menu
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.navigation.NavigationView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.navigation.NavigationView
 import com.peter.foody.R
 import com.peter.foody.databinding.ActivityMainDrawerBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,13 +19,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainDrawerActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-private lateinit var binding: ActivityMainDrawerBinding
+    private lateinit var binding: ActivityMainDrawerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-     binding = ActivityMainDrawerBinding.inflate(layoutInflater)
-     setContentView(binding.root)
+        binding = ActivityMainDrawerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         setSupportActionBar(binding.appBarMainDrawer.toolbar)
 
@@ -38,9 +38,17 @@ private lateinit var binding: ActivityMainDrawerBinding
         val navController = findNavController(R.id.nav_host_fragment_content_main_drawer)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.mainFragment, R.id.addProductFragment, R.id.editProductFragment, R.id.dailyClosingFragment
-            ,R.id.summaryReportFragment,R.id.salesReportFragment ,R.id.CategoryFragment), drawerLayout)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.mainFragment,
+                R.id.addProductFragment,
+                R.id.editProductFragment,
+                R.id.dailyClosingFragment,
+                R.id.summaryReportFragment,
+                R.id.salesReportFragment,
+                R.id.CategoryFragment
+            ), drawerLayout
+        )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }

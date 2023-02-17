@@ -24,7 +24,6 @@ import android.widget.ListView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -160,8 +159,6 @@ class MainFragment : Fragment() {
 
             // set transparent background
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.WHITE))
-
-            // show dialog
 
             // show dialog
             dialog.show()

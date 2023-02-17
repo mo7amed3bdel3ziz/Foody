@@ -22,9 +22,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel
-//@Inject constructor(private val useCase: FoodUseCase) :
-@Inject constructor(private val repository: FoodRepository):
+class MainViewModel @Inject constructor(private val repository: FoodRepository):
     ViewModel() {
     private val _categories = MutableLiveData<List<Category>>()
     val categories: LiveData<List<Category>>
