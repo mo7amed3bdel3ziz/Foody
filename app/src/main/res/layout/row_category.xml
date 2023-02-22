@@ -21,7 +21,7 @@
             android:layout_weight="0.25"
 
             android:gravity="center"
-            android:text="@{String.valueOf(data.balanc)}"
+            android:text="@{String.valueOf(data.price)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/textView40"
             app:layout_constraintStart_toEndOf="@+id/textView45"
@@ -37,7 +37,7 @@
             android:layout_marginBottom="11dp"
             android:layout_weight="0.25"
             android:gravity="center"
-            android:text="@{String.valueOf(data.contaty)}"
+            android:text="@{String.valueOf(data.quantity)}"
 
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/textView39"
@@ -67,6 +67,6 @@
 
         <variable
             name="data"
-            type="com.peter.foody.business.model.foods.FoodBill" />
+            type="com.peter.foody.data.remote.model.models.ItemsModels" />
     </data>
 </layout>

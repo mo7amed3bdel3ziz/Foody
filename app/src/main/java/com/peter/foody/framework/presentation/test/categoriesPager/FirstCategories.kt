@@ -17,6 +17,7 @@ import com.peter.foody.framework.presentation.adapters.CategoriesAdapter
 import com.peter.foody.framework.presentation.adapters.OffersAdapter
 import com.peter.foody.framework.presentation.adapters.OnOfferClickListener
 import com.peter.foody.framework.presentation.main.MainViewModel
+import com.peter.foody.framework.presentation.ui.account.AccountViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.ArrayList
 
@@ -25,6 +26,8 @@ class FirstCategories : Fragment() {
 
     private lateinit var binding: FragmentFirstCategoriesBinding
     private val viewModel: MainViewModel by viewModels()
+    private val accountviewModel: AccountViewModel by viewModels()
+
     var list= ArrayList<FoodBill>()
     lateinit var adapter2 : CategoriesAdapter
 
@@ -40,16 +43,22 @@ class FirstCategories : Fragment() {
 
         val adapter = OffersAdapter(OnOfferClickListener { })
 //
-        viewModel.Food.observe(viewLifecycleOwner) {
-            when (it) {
-                is State.Loading -> Log.d("0", "")
-                is State.Success -> if (it.data.State == 1) {
-                    binding.offers.adapter = adapter
-                    adapter.submitList(it.toData()!!.data)
-                }
-                is State.Error -> Log.d("0", "")
-            }
+        viewModel.getItemsFromLocalDB()
+        viewModel.getItemsLiveData.observe(viewLifecycleOwner){
+            Log.d("accountviewModel",it.get(0).Barcode.toString())
+            adapter.submitList(it)
+            binding.offers.adapter =    adapter
         }
+//        viewModel.Food.observe(viewLifecycleOwner) {
+//            when (it) {
+//                is State.Loading -> Log.d("0", "")
+//                is State.Success -> if (it.data.State == 1) {
+//                    binding.offers.adapter = adapter
+//                    adapter.submitList(it.toData()!!.data)
+//                }
+//                is State.Error -> Log.d("0", "")
+//            }
+//        }
         return binding.root
     }
 }

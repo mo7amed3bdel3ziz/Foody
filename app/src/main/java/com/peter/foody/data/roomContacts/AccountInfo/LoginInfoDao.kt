@@ -13,13 +13,17 @@ interface LoginInfoDao {
     suspend fun insertContacts(user: LoginModel?)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllOrders(order: List<LoginModel?>?)
+    fun insertAllComDB(order: List<LoginModel>)
 
     @Query("select*from LoginModel")
-    fun getContacts(): Flow<List<LoginModel?>?>?
+    fun getContacts(): Flow<List<LoginModel>>
 
     @Query("Select * from LoginModel  WHERE comid= :ITEMCODE")
-    fun getlistItems(ITEMCODE: String?): Flow<List<LoginModel?>?>?
+    fun getlistItems(ITEMCODE: String?): Flow<List<LoginModel>>
+
+
+    @Query(value = "DELETE from LoginModel")
+    suspend  fun deleteAll()
 
 
 }

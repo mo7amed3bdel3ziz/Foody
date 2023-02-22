@@ -1,16 +1,32 @@
 package com.peter.foody.data.remote.model.models;
 
-public class AddItemModel {
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
+@Entity(tableName = "AddItemModel",indices = @Index(value = {"ItemName"},unique = true))
+public class AddItemModel {
+    @PrimaryKey(autoGenerate = true)
     int Record_ID;
+
+    @ColumnInfo(name = "ItemName")
     String ItemName;
+    @ColumnInfo(name = "AndroidID")
     String AndroidID;
+    @ColumnInfo(name = "Barcode")
     String Barcode;
+    @ColumnInfo(name = "Description")
     String Description;
+    @ColumnInfo(name = "Editor")
     String Editor;
+    @ColumnInfo(name = "ItemType")
     String ItemType;
+    @ColumnInfo(name = "ItemCode")
     String ItemCode;
+    @ColumnInfo(name = "UnitType")
     String UnitType;
+    @ColumnInfo(name = "Price")
     double Price;
 
 //    public AddItemModel(int record_ID, String itemName, String androidID, String barcode, String description, String editor, String itemType, String itemCode, String unitType, double price)

@@ -26,4 +26,7 @@ interface ItemsBillDao {
     @Query("DELETE FROM ItemsBill")
     fun delete()
 
+    @Query(value = "DELETE from ItemsBill")
+    suspend  fun deleteAll()
+
 }

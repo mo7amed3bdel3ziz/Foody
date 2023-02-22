@@ -24,18 +24,21 @@ import android.widget.ListView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.peter.foody.business.model.Slider
-import com.peter.foody.business.model.foods.FoodBill
-import com.peter.foody.business.model.foods.SetBillModel
-import com.peter.foody.business.usecases.State
+import com.hend.calldetailsrecorder.data.roomContacts.backup.ItemsBackup
+import com.peter.foody.data.remote.model.classes.ItemDatum
+import com.peter.foody.data.remote.model.models.ItemsModels
+import com.peter.foody.data.roomContacts.productRoom.ItemsBill
 import com.peter.foody.databinding.FragmentMainBinding
 import com.peter.foody.framework.presentation.adapters.*
 import com.peter.foody.framework.presentation.reports.PrintPic
+import com.peter.foody.framework.presentation.ui.account.AccountViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -45,8 +48,9 @@ import java.util.*
 class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private val viewModel: MainViewModel by viewModels()
-    var list=ArrayList<FoodBill>()
-    lateinit var adapter2 : CategoriesAdapter
+    private val accountviewModel: AccountViewModel by viewModels()
+    var list = ArrayList<ItemsModels>()
+    lateinit var adapter2: CategoriesAdapter
 
 
     var mBluetoothAdapter: BluetoothAdapter? = null
@@ -65,15 +69,15 @@ class MainFragment : Fragment() {
     @Volatile
     var stopWorker = false
 
-    var numberOfBill :Int = 0
+    var numberOfBill: Int = 0
 
     var msgToPrint = ""
 
-    var CusID:String = ""
-    var name:String = ""
-    var Total= ""
-    var TotalReturn=""
-    var Unpaid_deferred=""
+    var CusID: String = ""
+    var name: String = ""
+    var Total = ""
+    var TotalReturn = ""
+    var Unpaid_deferred = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -83,17 +87,17 @@ class MainFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-       val macAddress =
-           Settings.Secure.getString(activity!!.getContentResolver(), "android_id")
+        val macAddress =
+            Settings.Secure.getString(activity!!.getContentResolver(), "android_id")
 
 
 
         binding.payBtn.setOnClickListener {
             registerBillAndPrint("hph")
-            if(list.isEmpty()&&list.size==0){
+            if (list.isEmpty() && list.size == 0) {
 
-            }else{
-                var progressDoalog: ProgressDialog  = ProgressDialog(activity)
+            } else {
+                var progressDoalog: ProgressDialog = ProgressDialog(activity)
                 progressDoalog.max = 100
                 progressDoalog.setMessage("Its loading....")
                 progressDoalog.setTitle(" جارى تسجيل الفاتوره ")
@@ -101,8 +105,8 @@ class MainFragment : Fragment() {
                 //    progressDoalog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 progressDoalog.show()
 
-                viewModel.setBill(SetBillModel("6", macAddress,list))
-                viewModel.ruternBill.observe(activity!!){
+                //   viewModel.setBill(SetBillModel("6", macAddress,list))
+                viewModel.ruternBill.observe(activity!!) {
                     Toast.makeText(context, it.toData().toString(), Toast.LENGTH_SHORT).show()
                     Toast.makeText(context, it.toData().toString(), Toast.LENGTH_SHORT).show()
                     // noteeee
@@ -112,16 +116,16 @@ class MainFragment : Fragment() {
             }
 
 
-
         }
 
 
-         adapter2 = CategoriesAdapter(onCategoryClickListener = OnCategoryClickListener {
-          //  it
+        adapter2 = CategoriesAdapter(onCategoryClickListener = OnCategoryClickListener {
+            //    Log.d("accountviewModel", it.get(0).Barcode.toString())
+            //  it
             Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
 
             // set value in array list
-            var  arrayList = ArrayList<Int>()
+            var arrayList = ArrayList<Int>()
 
             // set value in array list
             arrayList.add(1)
@@ -184,144 +188,30 @@ class MainFragment : Fragment() {
 
             listView.onItemClickListener =
                 OnItemClickListener { parent, view, position, id ->
-                    Toast.makeText(context,  adapterlist.getItem(position).toString(), Toast.LENGTH_SHORT).show()
-                   list.get(it).contaty= adapterlist.getItem(position)!!
 
-                   list.get(it).balanc= list.get(it).contaty*list.get(it).Selling_Price
-                    //= adapterlist.getItem(position)!!
+                    Toast.makeText(
+                        context,
+                        adapterlist.getItem(position).toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    list.get(it).Quantity = adapterlist.getItem(position)!!
+                    var totalPrice = list.get(it).Quantity * list.get(it).Price
+                    list.get(it).Price = totalPrice
+                    Toast.makeText(
+                        context, totalPrice.toString()
+                        //  adapterlist.getItem(position).toString()
+                        , Toast.LENGTH_SHORT
+                    ).show()
 
-                    adapter2.notifyDataSetChanged()
                     calculateBalance(list)
+                    adapter2.notifyDataSetChanged()
 
-                   // list.set(it,String replaceElement);
                     dialog.dismiss()
                 }
-           // Toast.makeText(context, it.ItemName, Toast.LENGTH_SHORT).show()
+
         })
 
-       binding. textView3.setOnClickListener {
 
-           var list2=ArrayList<Slider>()
-           list2.add(Slider(""))
-           list2.add(Slider(""))
-           list2.add(Slider(""))
-           list2.add(Slider(""))
-           list2.add(Slider(""))
-           list2.add(Slider(""))
-           list2.add(Slider(""))
-           list2.add(Slider(""))
-           val adapter12 =  SlidersAdapter( onSliderClickListener= OnSliderClickListener{
-
-
-           })
-           binding.offers.adapter =    adapter12
-           adapter12 .submitList(list2)
-       }
-
-
-        binding.Add.setOnClickListener {
-            val name=binding.nameTv.text.toString()
-            val code=  binding.CodeID.text.toString()
-            val contaty=  binding.cashEditText.text.toString()
-            val Selling_Price=  binding.saleTv.text.toString()
-            val  balanc=  binding.deferredEditText.text.toString()
-
-            list.add(FoodBill(
-
-               1,name,
-
-                        name,
-                                code,
-                        contaty.toInt(),
-                        Selling_Price.toDouble(),
-                        balanc.toDouble(),
-                        1,
-                        1,
-                        0.0,
-                0.0,
-                0.0,
-                1,
-                1,
-                1,
-            ) )
-            binding.categories.adapter = adapter2
-            adapter2.submitList(list)
-            calculateBalance(list)
-
-        }
-
-
-        binding.button2.setOnClickListener {
-            // set value in array list
-            val arrayList = java.util.ArrayList<Int>()
-
-            // set value in array list
-            arrayList.add(1)
-            arrayList.add(2)
-            arrayList.add(3)
-            arrayList.add(4)
-            arrayList.add(5)
-            arrayList.add(6)
-            arrayList.add(7)
-            arrayList.add(8)
-            arrayList.add(9)
-            arrayList.add(10)
-            arrayList.add(11)
-            arrayList.add(12)
-            arrayList.add(13)
-            arrayList.add(14)
-            arrayList.add(15)
-
-            // Initialize dialog
-
-            // Initialize dialog
-            val dialog = Dialog(context!!)
-
-            // set custom dialog
-
-            // set custom dialog
-            dialog.setContentView(R.layout.list_content)
-
-            // set custom height and width
-
-            // set custom height and width
-            dialog.window!!.setLayout(300, 300)
-
-            // set transparent background
-
-            // set transparent background
-            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.WHITE))
-
-            // show dialog
-
-            // show dialog
-            dialog.show()
-
-            // Initialize and assign variable
-            // EditText editText=dialog.findViewById(R.id.edit_text);
-
-            // Initialize and assign variable
-            // EditText editText=dialog.findViewById(R.id.edit_text);
-            val listView = dialog.findViewById<ListView>(R.id.list)
-
-            // Initialize array adapter
-
-            // Initialize array adapter
-            val adapterlist: ArrayAdapter<Int> =
-                ArrayAdapter<Int>(context!!, R.layout.simple_list_item_1, arrayList)
-
-            // set adapter
-
-            // set adapter
-            listView.adapter = adapterlist
-
-            listView.onItemClickListener =
-                OnItemClickListener { parent, view, position, id -> // when item selected from list
-                   binding.cashEditText.setText(adapterlist.getItem(position).toString() + "")
-                    dialog.dismiss()
-                }
-
-        }
 
         binding.cashEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -333,59 +223,63 @@ class MainFragment : Fragment() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-              //  Toast.makeText(applicationContext, p0.toString(), Toast.LENGTH_SHORT).show()
+                //  Toast.makeText(applicationContext, p0.toString(), Toast.LENGTH_SHORT).show()
                 if (p0?.isEmpty() == true) {
                     binding.deferredEditText.setText("0.0")
+                    calculateBalance(list)
                 } else {
-                    if (  binding.saleTv.text.isEmpty()&&  binding.saleTv.text.length==0){
+                    if (binding.saleTv.text.isEmpty() && binding.saleTv.text.length == 0) {
 
 
                         binding.saleTv.setText("0.0")
 
-                }else{
+                    } else {
                         binding.deferredEditText.setText("")
 
-                        var Total=   binding.saleTv.text.toString().toDouble()*
+                        var Total = binding.saleTv.text.toString().toDouble() *
                                 binding.cashEditText.text.toString().toDouble()
                         binding.deferredEditText.setText(Total.toString())
                         binding.deferredEditText.setText(Total.toString())
-                }
+                    }
 
                 }
             }
         })
 
-        binding.offers.layoutManager=StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.HORIZONTAL)
-            val adapter = OffersAdapter(onOfferClickListener = OnOfferClickListener {
 
-                binding.nameTv.setText("")
-                binding.saleTv.setText("")
-                binding.cashEditText.setText("0")
-                binding.CodeID.setText("")
+        binding.offers.layoutManager =
+            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL)
+        val adapter = OffersAdapter(onOfferClickListener = OnOfferClickListener {
 
-                binding.deferredEditText.setText("0.0")
-                binding.nameTv.setText(it.ItemName)
-                binding.saleTv.setText(it.Selling_Price.toString())
-                binding.CodeID.setText(it.Barcode)
+            list.add(
+                ItemsModels(
+                    it.Record_ID,
+                    it.ItemName!!,
+                    it.Barcode!!,
+                    it.Description!!,
+                    it.Editor!!,
+                    it.Date!!,
+                    it.UnitType!!,
+                    it.ItemType!!,
+                    it.ItemCode.toString(),
+                    it.Price,
+                    1
+                )
+            )
+            calculateBalance(list)
+            binding.categories.adapter = adapter2
+            adapter2.submitList(list)
 
-                Toast.makeText(context, it.ItemName, Toast.LENGTH_SHORT).show()
-            })
+        })
 
-        viewModel.Food.observe(viewLifecycleOwner){
-        when(it){
-            is State.Loading ->Log.d("0","")
-            is State.Success -> if (it.data.State==1){
-                binding.offers.adapter =    adapter
-                adapter.submitList(it.toData()!!.data)
-            }
-
-              //  Log.d("0","")
-            is State.Error ->Log.d("0","")
-
+        viewModel.getItemsFromLocalDB()
+        viewModel.getItemsLiveData.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+            binding.offers.adapter = adapter
         }
-        //    binding.offers.adapter =    adapter
-           // adapter.submitList( it)
-        }
+
+
+
 
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             override fun onMove(
@@ -409,36 +303,155 @@ class MainFragment : Fragment() {
             }
         }).attachToRecyclerView(binding.categories)
 
+        Log.d("ddddddddd", "s")
 
-        binding.textView2.setOnClickListener {
-            viewModel.Food.observe(viewLifecycleOwner) {
-                when (it) {
-                    is State.Loading -> Log.d("0", "")
-                    is State.Success -> if (it.data.State == 1) {
-                        binding.offers.adapter = adapter
-                        adapter.submitList(it.toData()!!.data)
-                    }else{
-                         State.Error(it.data.Message)
-                    }
 
-                    is State.Error-> Toast.makeText(activity,it.toError(),Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+        lifecycleScope.launch {}
+
         return binding.root
     }
 
-    private fun calculateBalance(list: ArrayList<FoodBill>) {
+
+    private fun createBill() {
+        val itemData: ArrayList<ItemDatum> = ArrayList<ItemDatum>()
+        val ItemsBillRoom: ArrayList<ItemsBill> = ArrayList<ItemsBill>()
+        val ItemsBillRoomBackup: ArrayList<ItemsBackup> = ArrayList<ItemsBackup>()
+
+
+        var price = 0.0
+        var Tax = 0.0
+        var totalPrice = 0.0
+        var itemId = 0
+        for (i in list) {
+
+            //To Create List to UUID
+            itemData.add(
+                viewModel.converterProductToItemDatum(
+                    java.lang.Double.valueOf(i.Quantity.toDouble()),
+                    java.lang.Double.valueOf(i.Price),
+                    java.lang.Double.valueOf(i.Price),
+                    i.Description,
+                    i.Barcode,
+                    i.UnitType,
+                    i.ItemType,
+                    java.lang.String.valueOf(i.ItemCode)
+                )
+            )
+
+            //   //To Create List to Room
+            //   ItemsBillRoom.add(
+            //       homeViewModel.setItemsRoom(
+            //           i.getDescription(),
+            //           java.lang.Double.valueOf(i.getPrice()),
+            //           numberRicet,
+            //           itemId.toString(),
+            //           java.lang.Double.valueOf(i.getQuantity()),
+            //           i.getUnitType(),
+            //           i.getItemType(),
+            //           java.lang.String.valueOf(i.getItemCode()),
+            //           i.getBarcode()
+            //       )
+            //   )
+
+            //   //To Create List to Room Backup
+            //   ItemsBillRoomBackup.add(
+            //       homeViewModel.setItemsRoomBackup(
+            //           i.getDescription(),
+            //           java.lang.Double.valueOf(i.getPrice()),
+            //           numberRicet,
+            //           itemId.toString()
+            //       )
+            //   )
+
+            // Tax += i.getTax();
+            // price += i.getprice();
+            // totalPrice += i.getTotal();
+//
+            price += java.lang.Double.valueOf(i.Price)
+            Tax = price * 14.0 / 100
+            totalPrice = price + Tax
+            itemId++
+            Log.d("onSuccesss", price.toString() + "")
+        }
+
+
+        Log.d("onSuccess", price.toString() + "")
+        Log.d("onSuccess", Tax.toString() + "")
+        Log.d("onSuccess", totalPrice.toString() + "")
+
+
+        //To Create UUID
+
+
+//      //To Create UUID
+//      val uu: String = viewModel.CreateUUID(numberRicet, "", TimeRicet, itemData)
+//      Log.d("onSuccess", uu)
+//      val QR =
+//          " https://preprod.invoicing.eta.gov.eg/receipts/search/$uu"
+
+
+//      //    String url ="https://preprod.invoicing.eta.gov.eg/receipts/search/a700243730510ebd8499d9d895ad7eb4ee4ba9d22b3bf155d81552f7e31dd93d";
+//      //To Create New Bill in Room db
+
+
+//      //    String url ="https://preprod.invoicing.eta.gov.eg/receipts/search/a700243730510ebd8499d9d895ad7eb4ee4ba9d22b3bf155d81552f7e31dd93d";
+//      //To Create New Bill in Room db
+//      val headerBill = HeaderBill()
+//      headerBill.setUUID(uu)
+//      headerBill.setBillNumber(numberRicet)
+//      headerBill.setInvoiceDate(TimeRicet)
+//      headerBill.setTax(Tax)
+//      headerBill.setNetPrice(price)
+//      headerBill.setTotalPrice(totalPrice)
+//      headerBill.setLink(QR)
+
+//      //To Insert New Bill in Room db
+
+//      //To Insert New Bill in Room db
+//      homeViewModel.headBill(headerBill, ItemsBillRoom, activity)
+
+        // Root r = homeViewModel.sentApi(uu, itemData, TimeRicet, numberRicet);
+
+        // Log.d("onSuccess",g.toJson(r));
+        // Send(r);
+        //     printp(QR,"android.binder.printer");
+        // String bill = setpill();
+        //    ssss();
+        // setPrintBT(bill, QR);
+        // printp(QR, "android.binder.printer");
+
+        //To Create online Bill
+        //  Root createRoot = homeViewModel.sentApi(uu, itemData, TimeRicet, numberRicet);
+        //  homeViewModel.Send(createRoot, HeaderOnline, ItemsBillRoomOnlin, getActivity());
+
+        // Root r = homeViewModel.sentApi(uu, itemData, TimeRicet, numberRicet);
+
+        // Log.d("onSuccess",g.toJson(r));
+        // Send(r);
+        //     printp(QR,"android.binder.printer");
+        // String bill = setpill();
+        //    ssss();
+        // setPrintBT(bill, QR);
+        // printp(QR, "android.binder.printer");
+
+        //To Create online Bill
+        //  Root createRoot = homeViewModel.sentApi(uu, itemData, TimeRicet, numberRicet);
+        //  homeViewModel.Send(createRoot, HeaderOnline, ItemsBillRoomOnlin, getActivity());
+        list.clear()
+
+
+    }
+
+    private fun calculateBalance(list: ArrayList<ItemsModels>) {
         var totalBalance = 0.0
         for (i in list.indices) {
-            totalBalance += list[i].balanc
+            totalBalance += list[i].Price
         }
         binding.totalBalance.text = totalBalance.toString()
     }
+
     @Throws(IOException::class)
-    fun registerBillAndPrint(numerofBill:String) {
-
-
+    fun registerBillAndPrint(numerofBill: String) {
 
 
         msgToPrint = msgToPrint.plus("Technology & Business Integration")
@@ -446,10 +459,11 @@ class MainFragment : Fragment() {
         //  }
         //  }
         print()
-      //  Log.i("MSG_TO_PRINT", msgToPrint)
+        //  Log.i("MSG_TO_PRINT", msgToPrint)
         //  print.value = true
         //   }
     }
+
     fun print() {
         findBT()
         openBT()
@@ -466,7 +480,7 @@ class MainFragment : Fragment() {
             if (mBluetoothAdapter == null) {
                 Toast.makeText(context, "No bluetooth adapter available", Toast.LENGTH_SHORT).show()
 
-               // viewModel.message.value = "No bluetooth adapter available"
+                // viewModel.message.value = "No bluetooth adapter available"
             }
             if (mBluetoothAdapter?.isEnabled == false) {
                 val enableBluetooth = Intent(
@@ -487,7 +501,7 @@ class MainFragment : Fragment() {
             }
             Toast.makeText(context, "Bluetooth Device Found", Toast.LENGTH_SHORT).show()
 
-          //  viewModel.message.value = "Bluetooth Device Found"
+            //  viewModel.message.value = "Bluetooth Device Found"
         } catch (e: NullPointerException) {
             e.printStackTrace()
         } catch (e: Exception) {
@@ -508,7 +522,7 @@ class MainFragment : Fragment() {
             beginListenForData()
             Toast.makeText(context, "Bluetooth Opened", Toast.LENGTH_SHORT).show()
 
-         //   viewModel.message.value = "Bluetooth Opened"
+            //   viewModel.message.value = "Bluetooth Opened"
         } catch (e: NullPointerException) {
             e.printStackTrace()
         } catch (e: Exception) {
@@ -610,6 +624,7 @@ class MainFragment : Fragment() {
     // Close the connection to bluetooth printer.
     @Throws(IOException::class)
     fun closeBT() {
+
         try {
             stopWorker = true
             mmOutputStream?.close()
@@ -621,6 +636,7 @@ class MainFragment : Fragment() {
             e.printStackTrace()
         }
     }
+
     fun textAsBitmap(textWidth: Int, textSize: Int, context: Context): Bitmap? {
 
         // Get text dimensions
@@ -630,10 +646,10 @@ class MainFragment : Fragment() {
         )
         textPaint.style = Paint.Style.FILL_AND_STROKE
 
-      //  val font = Typeface.createFromAsset(activity!!.assets, "font/kawkabregular.ttf")
+        //  val font = Typeface.createFromAsset(activity!!.assets, "font/kawkabregular.ttf")
 
-    //    val typeface=font
-     //   textPaint.typeface = typeface
+        //    val typeface=font
+        //   textPaint.typeface = typeface
         textPaint.color = Color.BLACK
         textPaint.textSize = textSize.toFloat()
         val mTextLayout = StaticLayout(
@@ -652,7 +668,7 @@ class MainFragment : Fragment() {
         )
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE
-      //  paint.typeface = typeface
+        //  paint.typeface = typeface
         c.drawPaint(paint)
 
 // Draw text
@@ -662,7 +678,6 @@ class MainFragment : Fragment() {
         c.restore()
         return b
     }
-
 
 
 }

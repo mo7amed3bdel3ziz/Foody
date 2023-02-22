@@ -1,9 +1,11 @@
 package com.peter.foody.data.roomContacts.AccountInfo
 
+import android.R
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import io.ktor.sessions.*
 
 @Entity(tableName = "LoginModel", indices = [Index(value = ["comid"], unique = true)])
 
@@ -14,91 +16,91 @@ data class LoginModel(
     var comid: Int,
 
 
-    @ColumnInfo(name = "branchID")
-    var branchID: Int?,
+    @ColumnInfo(defaultValue = "")
+    var branchID: Int,
 
-    @ColumnInfo(name = "POS_id")
-    var POS_id: Int?,
+    @ColumnInfo(defaultValue = "")
+    var POS_id: Int,
 
-    @ColumnInfo(name = "Name")
-    var Name: String?,
+    @ColumnInfo(defaultValue = "")
+    var Name: String,
 
-    @ColumnInfo(name = "tax_id")
-    var tax_id: Int?,
+    @ColumnInfo(defaultValue = "")
+    var tax_id: Int,
 
-    @ColumnInfo(name = "type")
-    var type: String?,
+    @ColumnInfo(defaultValue = "")
+    var type: String,
 
-    @ColumnInfo(name = "taxpayerActivityCode")
-    var taxpayerActivityCode: String?,
+    @ColumnInfo(defaultValue = "")
+    var taxpayerActivityCode: String,
 
-    @ColumnInfo(name = "BranchName")
-    var BranchName: String?,
+    @ColumnInfo(defaultValue = "")
+    var BranchName: String,
 
-    @ColumnInfo(name = "country")
-    var country: String?,
-    @ColumnInfo(name = "governate")
-    var governate: String?,
+    @ColumnInfo(defaultValue = "")
+    var country: String,
+    @ColumnInfo(defaultValue = "")
+    var governate: String,
 
-    @ColumnInfo(name = "regionCity")
-    var regionCity: String?,
+    @ColumnInfo(defaultValue = "")
+    var regionCity: String,
 
-    @ColumnInfo(name = "street")
-    var street: String?,
+    @ColumnInfo(defaultValue = "")
+    var street: String,
 
-    @ColumnInfo(name = "buildingNumber")
-    var buildingNumber: String?,
+    @ColumnInfo(defaultValue = "")
+    var buildingNumber: String,
 
-    @ColumnInfo(name = "postalCode")
-    var postalCode: String?,
+    @ColumnInfo(defaultValue = "")
+    var postalCode: String,
 
-    @ColumnInfo(name = "LicenseExpiryDate")
-    var LicenseExpiryDate: String?,
+    @ColumnInfo(defaultValue = "")
+    var LicenseExpiryDate: String,
 
-    @ColumnInfo(name = "POSName")
-    var POSName: String?,
+    @ColumnInfo(defaultValue = "")
+    var POSName: String,
 
-    @ColumnInfo(name = "posserial")
-    var posserial: String?,
+    @ColumnInfo(defaultValue = "")
+    var posserial: String,
 
-    @ColumnInfo(name = "clintId")
-    var clintId: String?,
+    @ColumnInfo(defaultValue = "")
+    var clintId: String,
 
-    @ColumnInfo(name = "scId")
-    var scId: String?,
+    @ColumnInfo(defaultValue = "")
+    var scId: String,
 
-    @ColumnInfo(name = "pososversion")
-    var pososversion: String?,
+    @ColumnInfo(defaultValue = "")
+    var pososversion: String,
 
-    @ColumnInfo(name = "ENVIRONMENT")
-    var ENVIRONMENT: String?,
+    @ColumnInfo(defaultValue = "")
+    var ENVIRONMENT: String,
 
-    @ColumnInfo(name = "AndroidID")
-    var AndroidID: String?,
+    @ColumnInfo(defaultValue = "")
+    var AndroidID: String,
 
-    @ColumnInfo(name = "EnvironmentStatues")
-    var EnvironmentStatues: String?,
+    @ColumnInfo(defaultValue = "")
+    var EnvironmentStatues: String,
 
-    @ColumnInfo(name = "TypeVersion")
-    var TypeVersion: String?,
+    @ColumnInfo(defaultValue = "")
+    var TypeVersion: String,
 
-    @ColumnInfo(name = "SendToEtaWay")
-    var SendToEtaWay: String?,
+    @ColumnInfo(defaultValue = "")
+    var SendToEtaWay: String,
 
-    @ColumnInfo(name = "SendWayName")
-    var SendWayName: String?,
+    @ColumnInfo(defaultValue = "")
+    var SendWayName: String,
 
-    @ColumnInfo(name = "ItemFlag")
-    var ItemFlag: String?,
+    @ColumnInfo(defaultValue = "")
+    var ItemFlag: String,
 
-    @ColumnInfo(name = "ItemFlagName")
-    var ItemFlagName: String?,
+    @ColumnInfo(defaultValue = "")
+    var ItemFlagName: String,
 
-    @ColumnInfo(name = "PriceFlag")
-    var PriceFlag: String?,
+    @ColumnInfo(defaultValue = "")
+    var PriceFlag: String,
 
-    @ColumnInfo(name = "PriceFlagName")
-    var PriceFlagName: String?,
+    @ColumnInfo(defaultValue = "")
+    var PriceFlagName: String
 
     )
 

@@ -289,6 +289,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="75dp"
                 android:foregroundGravity="center"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:listitem="@layout/row_offers" />

@@ -38,16 +38,23 @@ class SecondCategories : Fragment() {
 
         val adapter = OffersAdapter(OnOfferClickListener { })
 
-        viewModel.Food.observe(viewLifecycleOwner) {
-            when (it) {
-                is State.Loading -> Log.d("0", "")
-                is State.Success -> if (it.data.State == 1) {
-                    binding.offers.adapter = adapter
-                    adapter.submitList(it.toData()!!.data)
-                }
-                is State.Error -> Log.d("0", "")
-            }
+        viewModel.getItemsFromLocalDB()
+        viewModel.getItemsLiveData.observe(viewLifecycleOwner){
+            Log.d("accountviewModel",it.get(0).Barcode.toString())
+            adapter.submitList(it)
+            binding.offers.adapter =    adapter
         }
+
+//        viewModel.Food.observe(viewLifecycleOwner) {
+//            when (it) {
+//                is State.Loading -> Log.d("0", "")
+//                is State.Success -> if (it.data.State == 1) {
+//                    binding.offers.adapter = adapter
+//                    adapter.submitList(it.toData()!!.data)
+//                }
+//                is State.Error -> Log.d("0", "")
+//            }
+//        }
 
         return binding.root
     }

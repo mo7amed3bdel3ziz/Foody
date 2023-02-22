@@ -87,7 +87,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:text='@{" السعر  :  "+ String.valueOf(data.selling_Price)}'
+                android:text='@{" السعر  :  "+ String.valueOf(data.Price)}'
 
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/rounded_light_orange_20"
@@ -107,6 +107,6 @@
 
         <variable
             name="data"
-            type="com.peter.foody.framework.datasource.responses.FoodResponse" />
+            type="com.peter.foody.data.roomContacts.onlineProduct.ItemsModel" />
     </data>
 </layout>

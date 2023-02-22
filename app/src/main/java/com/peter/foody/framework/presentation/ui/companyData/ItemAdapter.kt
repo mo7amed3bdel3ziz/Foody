@@ -1,4 +1,4 @@
-package com.peter.foody.framework.presentation.adapters
+package com.peter.foody.framework.presentation.ui.companyData
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,15 +8,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.peter.foody.R
 import com.peter.foody.data.roomContacts.onlineProduct.ItemsModel
+import com.peter.foody.databinding.ItemRowBinding
 import com.peter.foody.databinding.RowOffersBinding
-import com.peter.foody.framework.datasource.responses.FoodResponse
 
-class OffersAdapter(val onOfferClickListener: OnOfferClickListener) :
+class ItemAdapter (val onOfferClickListener: OnOfferClickListener) :
     ListAdapter<ItemsModel, OfferViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OfferViewHolder {
-        val binding = DataBindingUtil.inflate<RowOffersBinding>(
-            LayoutInflater.from(parent.context), R.layout.row_offers, parent, false
+        val binding = DataBindingUtil.inflate<ItemRowBinding>(
+            LayoutInflater.from(parent.context), R.layout.item_row, parent, false
         )
         return OfferViewHolder(binding)
     }
@@ -39,7 +39,7 @@ class OffersAdapter(val onOfferClickListener: OnOfferClickListener) :
     }
 }
 
-class OfferViewHolder(private var binding: RowOffersBinding) :
+class OfferViewHolder(private var binding: ItemRowBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(Offer: ItemsModel) {
         binding.data = Offer

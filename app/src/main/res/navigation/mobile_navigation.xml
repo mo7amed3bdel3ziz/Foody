@@ -43,5 +43,22 @@
         android:name="com.peter.foody.framework.presentation.categories.CategoryFragment"
         android:label="الاصناف" />
 
+    <fragment
+        android:id="@+id/companyDataFragment"
+        android:name="com.peter.foody.framework.presentation.ui.companyData.CompanyDataFragment"
+        android:label="fragment_company_data"
+        tools:layout="@layout/fragment_company_data" />
+
+    <fragment
+        android:id="@+id/itemFragment"
+        android:name="com.peter.foody.framework.presentation.ui.companyData.ItemFragment"
+        android:label="المنتجات"
+        tools:layout="@layout/fragment_item" />
+    <fragment
+        android:id="@+id/receiptsFragment"
+        android:name="com.peter.foody.receiptsFragment"
+        android:label=" ارسال الايصال"
+        tools:layout="@layout/fragment_receipts" />
+
 
 </navigation>

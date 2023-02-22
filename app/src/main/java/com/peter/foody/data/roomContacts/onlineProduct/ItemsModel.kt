@@ -10,33 +10,33 @@ import androidx.room.PrimaryKey
 data class ItemsModel(
     @PrimaryKey(autoGenerate = true)
     var Record_ID: Int,
-    @ColumnInfo(name = "ItemName")
-    var ItemName: String?,
+    @ColumnInfo(defaultValue = "")
+    var ItemName: String,
 
-    @ColumnInfo(name = "Barcode")
-    var Barcode: String?,
+    @ColumnInfo(defaultValue = "")
+    var Barcode: String,
 
-    @ColumnInfo(name = "Description")
-    var Description: String?,
+    @ColumnInfo(defaultValue = "")
+    var Description: String,
 
-    @ColumnInfo(name = "Editor")
-    var Editor: String?,
+    @ColumnInfo(defaultValue = "")
+    var Editor: String,
 
-    @ColumnInfo(name = "Date")
-    var Date: String?,
+    @ColumnInfo(defaultValue = "")
+    var Date: String,
 
-    @ColumnInfo(name = "ItemType")
-    var ItemType: String?,
+    @ColumnInfo(defaultValue = "")
+    var ItemType: String,
 
-    @ColumnInfo(name = "ItemCode")
+    @ColumnInfo(defaultValue = "")
     var ItemCode: Int,
 
-    @ColumnInfo(name = "UnitType")
-    var UnitType: String?,
+    @ColumnInfo(defaultValue = "")
+    var UnitType: String,
 
-    @ColumnInfo(name = "Price")
+    @ColumnInfo(defaultValue = "")
     var Price: Double,
 
-    @ColumnInfo(name = "Quantity")
+    @ColumnInfo(defaultValue = "")
     var Quantity: Int
 )
