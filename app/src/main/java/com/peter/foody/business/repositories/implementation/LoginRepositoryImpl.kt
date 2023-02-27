@@ -2,17 +2,15 @@ package com.peter.foody.business.repositories.implementation
 
 import android.util.Log
 import androidx.room.withTransaction
-import com.peter.foody.business.isInternetAvailable
 import com.peter.foody.business.usecases.State
 import com.peter.foody.business.wrapWithFlowApi
-import com.peter.foody.data.remote.ApiService
 import com.peter.foody.data.remote.model.models.*
 import com.peter.foody.data.roomContacts.AccountInfo.LoginModel
 import com.peter.foody.data.utils.networkBoundResource
 import com.peter.foody.di.BavariaDataBase
+import com.peter.foody.framework.datasource.network.ApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
@@ -57,24 +55,26 @@ class LoginRepositoryImpl @Inject constructor(
 //    }
 
 
-    fun loginInfoComb(androidID:String)= wrapWithFlowApi(
+    fun loginInfoComb(androidID: String) = wrapWithFlowApi(
 
-            fetch = {
-                api.LoginAPI(androidID)
-            }
-        ).flowOn(Dispatchers.IO)
-
-
-
-    fun branchInfoComb(ComID: String)= wrapWithFlowApi(
-
-            fetch = {
-                api.GetBranchAPI(ComID)
-            }
-        ).flowOn(Dispatchers.IO)
+        fetch = {
+            api.LoginAPI(androidID)
+        }
+    ).flowOn(Dispatchers.IO)
 
 
 
+
+
+
+
+
+    fun branchInfoComb(ComID: String) = wrapWithFlowApi(
+
+        fetch = {
+            api.GetBranchAPI(ComID)
+        }
+    ).flowOn(Dispatchers.IO)
 
 
     fun LoginAoiRepo(androidID: String) = flow<State<Task3<LoginModel>>> {
@@ -83,11 +83,11 @@ class LoginRepositoryImpl @Inject constructor(
         kotlin.runCatching {
             api.LoginAPI(androidID)!!.await()
         }.onFailure {
-            emit( State.Error(it.toString()))
+            emit(State.Error(it.toString()))
 
         }.onSuccess {
-            emit( State.Success(it))
-            Log.d("onSuccess",it.Message)
+            emit(State.Success(it))
+            Log.d("onSuccess", it.Message)
         }
 
     }.flowOn(IO)
@@ -99,10 +99,10 @@ class LoginRepositoryImpl @Inject constructor(
         kotlin.runCatching {
             api.GetBranchAPI(ComID)!!.await()
         }.onFailure {
-            emit( State.Error(it.toString()))
+            emit(State.Error(it.toString()))
         }.onSuccess {
             //  val s=      api.GetBranchAPI(ComID)!!.await()
-            emit( State.Success(it))
+            emit(State.Success(it))
         }
         //    try {
         //   val s=      api.GetBranchAPI(ComID)!!.await()
@@ -185,6 +185,27 @@ class LoginRepositoryImpl @Inject constructor(
 
     }.flowOn(IO)
 
+
+    fun GeCutomersDetailsRepo(
+        Number: String, ComID: Int, AndroidID: String
+    ) = flow<TaskCustomer<CustomerDetailsModel>> {
+        kotlin.runCatching {
+
+            api.GetCutomersDetailsAPI(Number, ComID, AndroidID)!!.await()
+
+        }.onFailure {
+            Log.d("GetCutomersDetailsAPI", it.message.toString())
+
+        }.onSuccess {
+            Log.d("GetCutomersDetailsAPI", "onSuccess")
+            emit(it)
+
+        }
+
+    }.flowOn(IO)
+
+
+
     fun AddItemRepo(add: AddItemModel) = flow<Task<AddItemModel>> {
         kotlin.runCatching {
             api.AddItemAPI(add)!!.await()
@@ -221,7 +242,7 @@ class LoginRepositoryImpl @Inject constructor(
     }.flowOn(IO)
 
     var loginDB = dataBase.loginInfoDao()
-   suspend fun getCompanyInfoInRoom(androidID: String) =
+    suspend fun getCompanyInfoInRoom(androidID: String) =
 
         networkBoundResource(
             query = {
@@ -240,30 +261,31 @@ class LoginRepositoryImpl @Inject constructor(
         ).flowOn(Dispatchers.IO)
 
 
-  //   var itemDB = dataBase.addItemModelDao()
-  //   fun getItemInfo(add: AddItemModel) =
+    //   var itemDB = dataBase.addItemModelDao()
+    //   fun getItemInfo(add: AddItemModel) =
 //
-  //       networkBoundResource(
-  //           query = {
-  //               itemDB.getContacts()!!
-  //           },
-  //           fetch = {
-  //               api.AddItemAPI(add)
+    //       networkBoundResource(
+    //           query = {
+    //               itemDB.getContacts()!!
+    //           },
+    //           fetch = {
+    //               api.AddItemAPI(add)
 //
-  //           },
-  //           saveFetchResult = { restaurants ->
-  //               dataBase.withTransaction {
-  //                   itemDB.deleteAll()
-  //                   itemDB.insertContacts(restaurants.item)
-  //               }
-  //           }
-  //       ).flowOn(Dispatchers.IO)
+    //           },
+    //           saveFetchResult = { restaurants ->
+    //               dataBase.withTransaction {
+    //                   itemDB.deleteAll()
+    //                   itemDB.insertContacts(restaurants.item)
+    //               }
+    //           }
+    //       ).flowOn(Dispatchers.IO)
 //
 
     var itemDB = dataBase.itemOnlineDao()
-    suspend  fun getItemInfo(
+    suspend fun getItemInfo(
         ComID: String,
-                    AndroidID: String) =
+        AndroidID: String
+    ) =
 
         networkBoundResource(
             query = {
@@ -271,7 +293,7 @@ class LoginRepositoryImpl @Inject constructor(
             },
             fetch = {
 
-                api.GetItemsAPI(ComID,AndroidID)
+                api.GetItemsAPI(ComID, AndroidID)
 
             },
             saveFetchResult = { restaurants ->

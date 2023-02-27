@@ -56,7 +56,7 @@
         tools:layout="@layout/fragment_item" />
     <fragment
         android:id="@+id/receiptsFragment"
-        android:name="com.peter.foody.receiptsFragment"
+        android:name="com.peter.foody.framework.presentation.ui.receipts.receiptsFragment"
         android:label=" ارسال الايصال"
         tools:layout="@layout/fragment_receipts" />
 

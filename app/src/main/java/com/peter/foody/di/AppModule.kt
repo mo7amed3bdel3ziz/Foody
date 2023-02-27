@@ -7,7 +7,7 @@ import com.peter.foody.business.repositories.abstraction.FoodRepository
 import com.peter.foody.business.repositories.implementation.FoodRepositoryImpl
 import com.peter.foody.business.usecases.abstraction.FoodUseCase
 import com.peter.foody.business.usecases.implementation.FoodUseCaseImpl
-import com.peter.foody.data.remote.ApiService
+import com.peter.foody.framework.datasource.network.ApiService
 import com.peter.foody.framework.datasource.network.FoodAPI
 import dagger.Module
 import dagger.Provides
@@ -43,7 +43,7 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideAPI2():ApiService{
+    fun provideAPI2(): ApiService {
         return Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .baseUrl(BAvaria)

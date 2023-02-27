@@ -1,21 +1,29 @@
 package com.peter.foody.framework.presentation.main
 
+import android.content.ContentResolver
+import android.provider.CallLog
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hend.calldetailsrecorder.common.extensions.getPhoneNumber
+import com.hend.calldetailsrecorder.data.remote.repository.UploadDetlsCallRepo
 import com.peter.foody.business.model.Category
 import com.peter.foody.business.model.Offer
 import com.peter.foody.business.model.Slider
 import com.peter.foody.business.model.foods.ModelStatMg
 import com.peter.foody.business.model.foods.SetBillModel
 import com.peter.foody.business.repositories.abstraction.FoodRepository
+import com.peter.foody.business.repositories.implementation.CustomerRepositoryImpl
 import com.peter.foody.business.usecases.State
 import com.peter.foody.data.remote.model.classes.*
+import com.peter.foody.data.remote.model.models.*
 import com.peter.foody.data.roomContacts.AccountInfo.LoginModel
 import com.peter.foody.data.roomContacts.onlineProduct.ItemsModel
 import com.peter.foody.di.BavariaDataBase
+import com.peter.foody.domain.PreferencesUC
+import com.peter.foody.framework.datasource.network.ApiHelper
 import com.peter.foody.framework.datasource.responses.FoodResponse
 import com.peter.foody.framework.datasource.responses.TaskAPI
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,7 +41,9 @@ import kotlin.experimental.and
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val repository: FoodRepository, private val dataBase: BavariaDataBase
+    private val repository: FoodRepository, private val customerRepositoryImpl: CustomerRepositoryImpl, private val dataBase: BavariaDataBase,
+    apiHelper: ApiHelper, preferencesUC: PreferencesUC,
+    contentResolver: ContentResolver
 ) : ViewModel() {
     private val _categories = MutableLiveData<List<Category>>()
     val categories: LiveData<List<Category>>
@@ -46,6 +56,7 @@ class MainViewModel @Inject constructor(
     private val _offers = MutableLiveData<List<Offer>>()
     val offers: LiveData<List<Offer>>
         get() = _offers
+
 
 
     var ruternBill = MutableLiveData<State<ModelStatMg>>()
@@ -89,7 +100,7 @@ class MainViewModel @Inject constructor(
     }
 
 
-    /**convert product from apis or any ways to ItemDatum to create uuid and root -**/
+    /**convert product from apis or any ways to ItemDatum to create uuid and root */
 
     fun converterProductToItemDatum(
         Quantity: Double,
@@ -162,7 +173,7 @@ class MainViewModel @Inject constructor(
 
        val b=  viewModelScope.async {
               companyInfo.getContacts().collect {
-                  sellerModel=     getSeller(it[0])
+                  sellerModel=getSeller(it[0])
 
                   loginModel = it[0]
                   val branch = BranchAddress(
@@ -393,5 +404,105 @@ class MainViewModel @Inject constructor(
         return sb.toString()
     }
 
+
+    // var setCustomeAddOrders = MutableLiveData<State<TaskOrder>>()
+    var setCustomeAddOrder = MutableLiveData <TaskOrder> ()
+
+    fun setCustomeAddOrdersVM(Number:String, Name:String,
+                              ComID: Int,
+                              AndroidID: String, NewAddress: String,
+                              ExistAddress: String, add: List<AddOrderModels>
+    ) {
+        viewModelScope.launch {
+            customerRepositoryImpl.seCutomersDetailsRepo(Number, Name, ComID, AndroidID, NewAddress, ExistAddress, add)
+                .collect {
+
+                    Log.d("setCustomeAddOrders", it.Order)
+                    setCustomeAddOrder .value =it
+
+                }
+        }
+    }
+
+
+    var customerDetails = MutableLiveData<State<TaskCustomer<CustomerDetailsModel>>>()
+    var customerDetailsOrders = MutableLiveData<List<CustomerOrders>>()
+    var customerDetailsPhone = MutableLiveData<List<CustomerPhone>>()
+    var customerDetailsAddress = MutableLiveData<List<CustomerAddress>>()
+    // var CustomerDetails = MutableLiveData<TaskCustomer<CustomerDetailsModel>>()
+
+    fun getCustomerDetailsVM(Number: String, ComID: Int, AndroidID: String) {
+        viewModelScope.launch {
+            customerRepositoryImpl.getCustomerDetailsRepo(Number, ComID, AndroidID)
+
+                .collect {
+                    when(it){
+                        is State.Loading -> {
+
+                        }
+                        is State.Success -> {
+                            customerDetailsOrders.value =it.data.data.CustomerOrders
+                            customerDetailsAddress.value =it.data.data.CustomerAddress
+
+                        }
+                        is State.Error ->{
+
+                        }
+                    }
+
+                    //  customerDetailsOrders.value = it.toData()!!.data.CustomerOrders
+                    //  customerDetailsPhone.value = it.toData()!!.data.CustomerPhone
+                    //  customerDetailsAddress.value = it.toData()!!.data.CustomerAddress
+
+
+                    //  customerDetails.value = it
+                    //  Log.d("viewModelScope", it.data.get(0).CustomerOrders.get(0).OrderNumber)
+//                Log.d("zzz", it.toData()!!.data.get(0).CustomerPhone.toString())
+
+
+                }
+        }
+    }
+    private var contentResolver:ContentResolver? = null
+
+    init {
+
+        this.contentResolver = contentResolver
+    }
+
+    var sentRingingActionLiveData = MutableLiveData<String>()
+
+   fun sentRingingAction() {
+        val number = contentResolver!!.getPhoneNumber()
+        Log.d("isEnteredRunning","number"+"getPhoneNumber");
+        val uri = CallLog.Calls.CONTENT_URI
+        Log.d("isEnteredRunning", contentResolver!!.getType(uri)+"getPhoneNumber");
+
+        GlobalScope.launch {
+            Dispatchers.IO
+            val number = contentResolver!!.getPhoneNumber()
+            Log.d("isEnteredRoneNumber",number+"getPhoneNumber");
+            sentRingingActionLiveData.value=number
+            Log.i("test","contentResolver + number = $number")
+            //  val response: CallResponse? = mApiHelper?.sentRingingAction(KEY, number)
+            //  preferencesUC?.saveRingCallId(response!!.ringCallId)
+            //  preferencesUC?.saveStatus(response!!.status)
+            //  Log.i(
+            //      "test", "sentRingingAction ringId = ${preferencesUC!!.getRingCallId()}" +
+            //              "status = ${preferencesUC!!.getStatus()} response = $response"
+            //  )
+        }
+
+    }
+
+ // private val uploadDetlsCallRepo = UploadDetlsCallRepo(apiHelper, preferencesUC,contentResolver)
+ // fun sentRingingAction() {
+ //     GlobalScope.launch {
+ //         Dispatchers.IO
+ //         uploadDetlsCallRepo.sentRingingAction()
+ //
+ //     }
+
+ // }
 }
 

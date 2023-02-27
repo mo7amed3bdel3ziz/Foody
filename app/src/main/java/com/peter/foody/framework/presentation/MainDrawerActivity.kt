@@ -45,7 +45,9 @@ class MainDrawerActivity : AppCompatActivity() {
                 R.id.editProductFragment,
                 R.id.dailyClosingFragment,
                 R.id.summaryReportFragment,
-                R.id.itemFragment, R.id.companyDataFragment,R.id.receiptsFragment,
+                R.id.itemFragment,
+                R.id.companyDataFragment,
+                R.id.receiptsFragment,
                 R.id.CategoryFragment
             ), drawerLayout
         )

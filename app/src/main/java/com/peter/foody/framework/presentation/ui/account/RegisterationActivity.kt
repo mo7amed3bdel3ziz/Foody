@@ -39,6 +39,7 @@ class RegisterationActivity : AppCompatActivity() {
             Settings.Secure.ANDROID_ID
         )
       //  networkBoundResource()
+
         binding.androidId.text=androidId
 
         binding.submit.setOnClickListener {
@@ -55,6 +56,7 @@ class RegisterationActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, CompanyId, Toast.LENGTH_SHORT).show()
 
             viewModel.branchInfoCombVM(CompanyId)
+
 
 
         }

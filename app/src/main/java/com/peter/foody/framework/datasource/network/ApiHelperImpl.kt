@@ -1,7 +1,9 @@
-package com.peter.foody.data.remote
+package com.peter.foody.framework.datasource.network
 
 
 import com.hend.calldetailsrecorder.data.remote.model.CallResponse
+import com.peter.foody.framework.datasource.network.ApiHelper
+import com.peter.foody.framework.datasource.network.ApiService
 
 
 class ApiHelperImpl(private val apiService: ApiService) : ApiHelper {

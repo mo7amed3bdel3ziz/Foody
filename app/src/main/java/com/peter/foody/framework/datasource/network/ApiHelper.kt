@@ -1,4 +1,4 @@
-package com.peter.foody.data.remote
+package com.peter.foody.framework.datasource.network
 
 import com.hend.calldetailsrecorder.data.remote.model.CallResponse
 

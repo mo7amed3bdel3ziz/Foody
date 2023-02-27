@@ -1,4 +1,4 @@
-package com.peter.foody.data.remote
+package com.peter.foody.framework.datasource.network
 
 
 import com.hend.calldetailsrecorder.data.remote.model.CallResponse
@@ -38,23 +38,17 @@ interface ApiService {
     ): CallResponse
 
 
+    // @Headers("Content-Type: application/json")
+    // @POST("api/Account/Login")
+    // fun LoginAPI(@Body s: String?): Deferred<Task3<LoginModel?>?>?
 
 
-
-
-   // @Headers("Content-Type: application/json")
-   // @POST("api/Account/Login")
-   // fun LoginAPI(@Body s: String?): Deferred<Task3<LoginModel?>?>?
-
-
-
-
-  //  @Headers("Content-Type: application/json")
-  //  @GET("api/Account/GetTodayItems")
-  //  fun GetTodayItemsAPI(
-  //      @Query("ComID") ComID: Int, @Query("date") date: String?,
-  //      @Query("AndroidID") AndroidID: String?
-  //  ): Observable<Task<TodayItemsModel?>?>?
+    //  @Headers("Content-Type: application/json")
+    //  @GET("api/Account/GetTodayItems")
+    //  fun GetTodayItemsAPI(
+    //      @Query("ComID") ComID: Int, @Query("date") date: String?,
+    //      @Query("AndroidID") AndroidID: String?
+    //  ): Observable<Task<TodayItemsModel?>?>?
 
 
 //    @Headers("Content-Type: application/json")
@@ -235,7 +229,6 @@ interface ApiService {
     fun GetBranchAPI(@Query("comID") ComID: String?): Deferred<Task2<BranchModel>>
 
 
-
     @Headers("Content-Type: application/json")
     @POST("api/Account/Reg_Request")
     fun GetRequestAPI(@Body add: RequestModel): Deferred<Task<RequestModel>>
@@ -256,7 +249,6 @@ interface ApiService {
     fun EditItemAPI(@Body add: EditItemModel): Deferred<Task<EditItemModel>>
 
 
-
     @Headers("Content-Type: application/json")
     @GET("api/Account/GetTodayItems")
     fun GetTodayItemsAPI(
@@ -266,11 +258,33 @@ interface ApiService {
 
     @Headers("Content-Type: application/json")
     @GET("api/Account/GetItems")
-
     fun GetItemsAPI(
-        @Query("ComID")     ComID: String?,
-        @Query("AndroidID") AndroidID: String?
+        @Query("ComID") ComID: String,
+        @Query("AndroidID") AndroidID: String
     ): Deferred<TaskAPI<ItemsModel>>
+
+
+    @Headers("Content-Type: application/json")
+    @GET("api2/Cutomers/GetDetails")
+    fun GetCutomersDetailsAPI(
+        @Query("Number") Number: String,
+        @Query("ComID") ComID: Int,
+        @Query("AndroidID") AndroidID: String
+    ): Deferred<TaskCustomer<CustomerDetailsModel>>
+
+
+    @Headers("Content-Type: application/json")
+    @POST("api2/Cutomers/AddOrder")
+    fun setCutomersAddOrderAPI(
+        @Query("Number") Number: String,
+        @Query("Name") Name: String,
+        @Query("ComID") ComID: Int,
+        @Query("AndroidID") AndroidID: String,
+        @Query("NewAddress") NewAddress: String,
+        @Query("ExistAddress") ExistAddress: String,
+        @Body add: List<AddOrderModels>
+
+    ): Deferred<TaskOrder>
 
 
 }

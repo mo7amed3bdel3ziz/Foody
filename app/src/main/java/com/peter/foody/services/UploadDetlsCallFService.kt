@@ -7,8 +7,8 @@ import androidx.lifecycle.LifecycleService
 import com.hend.calldetailsrecorder.common.Constant
 import com.hend.calldetailsrecorder.common.extensions.datastore
 import com.hend.calldetailsrecorder.common.helper.NotificationHelper
-import com.peter.foody.data.remote.ApiHelperImpl
-import com.peter.foody.data.remote.RetrofitClient
+import com.peter.foody.framework.datasource.network.ApiHelperImpl
+import com.peter.foody.framework.datasource.network.RetrofitClient
 import com.peter.foody.domain.PreferencesUC
 import com.hend.calldetailsrecorder.domain.UploadDetlsCallUC
 

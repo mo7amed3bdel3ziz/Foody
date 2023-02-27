@@ -62,8 +62,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="398dp"
                 android:layout_height="287dp"
-                android:layoutDirection="ltr"
-                >
+                android:layoutDirection="ltr">
 
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -94,7 +93,7 @@
                     android:foregroundGravity="center"
                     android:gravity="center"
 
-                    android:inputType="numberDecimal"
+
                     app:layout_constraintEnd_toStartOf="@+id/textView6"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -174,6 +173,8 @@
                     android:text="اسم المنتج :"
                     app:layout_constraintBottom_toTopOf="@+id/textView6"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toEndOf="@+id/product_code"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
@@ -182,7 +183,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
                     app:layout_constraintEnd_toStartOf="@+id/textView5"
-                    app:layout_constraintHorizontal_bias="0.464"
+                    app:layout_constraintHorizontal_bias="0.418"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textinput_cash" />
 

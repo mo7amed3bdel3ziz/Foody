@@ -30,7 +30,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.hend.calldetailsrecorder.data.roomContacts.backup.ItemsBackup
+import com.peter.foody.business.usecases.State
 import com.peter.foody.data.remote.model.classes.ItemDatum
+import com.peter.foody.data.remote.model.models.AddOrderModels
+import com.peter.foody.data.remote.model.models.CustomerAddress
+import com.peter.foody.data.remote.model.models.CustomerOrders
 import com.peter.foody.data.remote.model.models.ItemsModels
 import com.peter.foody.data.roomContacts.productRoom.ItemsBill
 import com.peter.foody.databinding.FragmentMainBinding
@@ -50,9 +54,11 @@ class MainFragment : Fragment() {
     private val viewModel: MainViewModel by viewModels()
     private val accountviewModel: AccountViewModel by viewModels()
     var list = ArrayList<ItemsModels>()
+    var AddOrderModelslist = ArrayList<AddOrderModels>()
     lateinit var adapter2: CategoriesAdapter
 
-
+    var address = ArrayList<CustomerAddress>()
+    var order = ArrayList<CustomerOrders>()
     var mBluetoothAdapter: BluetoothAdapter? = null
     var mmSocket: BluetoothSocket? = null
     var mmDevice: BluetoothDevice? = null
@@ -90,8 +96,6 @@ class MainFragment : Fragment() {
         val macAddress =
             Settings.Secure.getString(activity!!.getContentResolver(), "android_id")
 
-
-
         binding.payBtn.setOnClickListener {
             registerBillAndPrint("hph")
             if (list.isEmpty() && list.size == 0) {
@@ -106,7 +110,7 @@ class MainFragment : Fragment() {
                 progressDoalog.show()
 
                 //   viewModel.setBill(SetBillModel("6", macAddress,list))
-                viewModel.ruternBill.observe(activity!!) {
+                viewModel.ruternBill.observe(viewLifecycleOwner) {
                     Toast.makeText(context, it.toData().toString(), Toast.LENGTH_SHORT).show()
                     Toast.makeText(context, it.toData().toString(), Toast.LENGTH_SHORT).show()
                     // noteeee
@@ -118,11 +122,188 @@ class MainFragment : Fragment() {
 
         }
 
+        viewModel.getCustomerDetailsVM("01015490078", 1, "732a8c1694b73f08")
+        viewModel.customerDetails.observe(viewLifecycleOwner) {
+            when (it) {
+                is State.Loading -> Log.d("aziz", "")
+                is State.Success -> {
+                    binding.nameTv.setText(it.data.data.CusName)
+                    binding.saleTv.setText(it.data.data.CustomerPhone.get(0).CusPhone)
+                    it.data
+                }
+                is State.Error -> {
+                    Log.d("azdldiza", it.toError())
+                }
+            }
+        }
+
+        AddOrderModelslist.add(  AddOrderModels(
+            29017,
+            "pizza ",
+            "6222000505368",
+            "فول ب الزيت الحار",
+            "sample string 5",
+            "2023-02-26T00:46:31.380369-07:00",
+            1,
+            64,
+            6,
+            1,
+            1,
+            1,
+            1.0,
+            "GS1",
+            "sample string 8",
+            "99999999",
+            "sample string 10",
+            "sample string 11",
+            "EA"
+        ))
+        var number =""
+       viewModel.sentRingingAction()
+        viewModel.sentRingingActionLiveData.observe(viewLifecycleOwner){
+            number=it
+            binding.saleTv.setText(number)
+            Log.d("number",number)
+        }
+
+       // viewModel.setCustomeAddOrdersVM(number, "Yasser Hammad", 1,"732a8c1694b73f08","October","October",AddOrderModelslist )
+
+
+
+
+
+        viewModel.customerDetailsOrders.observe(viewLifecycleOwner) {
+            order = it as ArrayList<CustomerOrders>
+            binding.Add.setOnClickListener(View.OnClickListener {
+
+
+                var onlyOrder = ArrayList<String>()
+                for (item in order.indices) {
+
+                    onlyOrder.add(order.get(item).ItemName)
+
+                }
+                onlyOrder
+
+                // Initialize dialog
+                val dialog = Dialog(context!!)
+
+                // set custom dialog
+                dialog.setContentView(R.layout.list_content)
+
+                // set custom height and width
+                dialog.window!!.setLayout(450, 700)
+
+                // set transparent background
+                dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.WHITE))
+
+                // show dialog
+                dialog.show()
+
+                // Initialize and assign variable
+                // EditText editText=dialog.findViewById(R.id.edit_text);
+                val listView = dialog.findViewById<ListView>(R.id.list)
+
+                // Initialize array adapter
+                val adapterlist: ArrayAdapter<String> =
+                    ArrayAdapter<String>(context!!, R.layout.simple_list_item_1, onlyOrder)
+
+                // set adapter
+                listView.adapter = adapterlist
+                listView.onItemClickListener =
+                    OnItemClickListener { parent, view, position, id ->
+                        list.add(
+                            ItemsModels(
+                                order.get(position).Record_ID
+                                ,order.get(position).ItemName
+                                ,order.get(position).Barcode
+                                ,order.get(position).Description
+                                ,order.get(position).Editor
+                                ,order.get(position).Date
+                                ,order.get(position).UnitType
+                                ,order.get(position).UnitType
+                                ,order.get(position).ItemCode
+                                ,order.get(position).Price
+                                ,
+                                1
+                            )
+                        )
+
+
+
+
+
+                        binding.categories.adapter = adapter2
+                        adapter2.submitList(list)
+
+
+
+
+                        dialog.dismiss()
+                    }
+
+            })
+
+        }
+        viewModel.customerDetailsAddress.observe(viewLifecycleOwner) {
+            address = it as ArrayList<CustomerAddress>
+            binding.button2.setOnClickListener(View.OnClickListener {
+                binding.cashEditText.setText( "")
+
+                // Initialize dialog
+                var onlyAdress = ArrayList<String>()
+                for (item in address.indices) {
+
+                onlyAdress.add(address.get(item).CusAddress)
+
+                }
+                onlyAdress
+                val dialog = Dialog(context!!)
+
+                // set custom dialog
+                dialog.setContentView(R.layout.list_content)
+
+                // set custom height and width
+                dialog.window!!.setLayout(450, 700)
+
+                // set transparent background
+                dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.WHITE))
+
+                // show dialog
+                dialog.show()
+
+                // Initialize and assign variable
+                // EditText editText=dialog.findViewById(R.id.edit_text);
+                val listView = dialog.findViewById<ListView>(R.id.list)
+
+                // Initialize array adapter
+                val adapterlist: ArrayAdapter<String> =
+                    ArrayAdapter<String>(context!!, R.layout.simple_list_item_1, onlyAdress)
+
+                // set adapter
+                listView.adapter = adapterlist
+                listView.onItemClickListener =
+                    OnItemClickListener { parent, view, position, id ->
+
+
+                           binding.cashEditText.setText( adapterlist.getItem(position).toString())
+
+
+
+
+
+
+
+
+                        dialog.dismiss()
+                    }
+
+            })
+
+        }
 
         adapter2 = CategoriesAdapter(onCategoryClickListener = OnCategoryClickListener {
-            //    Log.d("accountviewModel", it.get(0).Barcode.toString())
-            //  it
-            Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
+            //  Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
 
             // set value in array list
             var arrayList = ArrayList<Int>()
@@ -145,21 +326,13 @@ class MainFragment : Fragment() {
             arrayList.add(15)
 
             // Initialize dialog
-
-            // Initialize dialog
             val dialog = Dialog(context!!)
-
-            // set custom dialog
 
             // set custom dialog
             dialog.setContentView(R.layout.list_content)
 
             // set custom height and width
-
-            // set custom height and width
             dialog.window!!.setLayout(300, 300)
-
-            // set transparent background
 
             // set transparent background
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.WHITE))
@@ -169,22 +342,14 @@ class MainFragment : Fragment() {
 
             // Initialize and assign variable
             // EditText editText=dialog.findViewById(R.id.edit_text);
-
-            // Initialize and assign variable
-            // EditText editText=dialog.findViewById(R.id.edit_text);
             val listView = dialog.findViewById<ListView>(R.id.list)
-
-            // Initialize array adapter
 
             // Initialize array adapter
             val adapterlist: ArrayAdapter<Int> =
                 ArrayAdapter<Int>(context!!, R.layout.simple_list_item_1, arrayList)
 
             // set adapter
-
-            // set adapter
             listView.adapter = adapterlist
-
 
             listView.onItemClickListener =
                 OnItemClickListener { parent, view, position, id ->
@@ -208,18 +373,14 @@ class MainFragment : Fragment() {
 
                     dialog.dismiss()
                 }
-
         })
-
 
 
         binding.cashEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -230,22 +391,18 @@ class MainFragment : Fragment() {
                 } else {
                     if (binding.saleTv.text.isEmpty() && binding.saleTv.text.length == 0) {
 
-
                         binding.saleTv.setText("0.0")
-
                     } else {
                         binding.deferredEditText.setText("")
 
-                        var Total = binding.saleTv.text.toString().toDouble() *
-                                binding.cashEditText.text.toString().toDouble()
+ //                       var Total = binding.saleTv.text.toString().toDouble() *
+//                                binding.cashEditText.text.toString().toDouble()
                         binding.deferredEditText.setText(Total.toString())
                         binding.deferredEditText.setText(Total.toString())
                     }
-
                 }
             }
         })
-
 
         binding.offers.layoutManager =
             StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL)
@@ -279,8 +436,6 @@ class MainFragment : Fragment() {
         }
 
 
-
-
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -297,14 +452,11 @@ class MainFragment : Fragment() {
                         View.OnClickListener { }).show()
                 list.removeAt(viewHolder.adapterPosition)
                 calculateBalance(list)
-
                 adapter2.notifyDataSetChanged()
-
             }
         }).attachToRecyclerView(binding.categories)
 
         Log.d("ddddddddd", "s")
-
 
         lifecycleScope.launch {}
 
@@ -316,8 +468,6 @@ class MainFragment : Fragment() {
         val itemData: ArrayList<ItemDatum> = ArrayList<ItemDatum>()
         val ItemsBillRoom: ArrayList<ItemsBill> = ArrayList<ItemsBill>()
         val ItemsBillRoomBackup: ArrayList<ItemsBackup> = ArrayList<ItemsBackup>()
-
-
         var price = 0.0
         var Tax = 0.0
         var totalPrice = 0.0
@@ -382,8 +532,6 @@ class MainFragment : Fragment() {
 
         //To Create UUID
 
-
-//      //To Create UUID
 //      val uu: String = viewModel.CreateUUID(numberRicet, "", TimeRicet, itemData)
 //      Log.d("onSuccess", uu)
 //      val QR =
@@ -439,13 +587,12 @@ class MainFragment : Fragment() {
         //  homeViewModel.Send(createRoot, HeaderOnline, ItemsBillRoomOnlin, getActivity());
         list.clear()
 
-
     }
 
     private fun calculateBalance(list: ArrayList<ItemsModels>) {
         var totalBalance = 0.0
         for (i in list.indices) {
-            totalBalance += list[i].Price
+            totalBalance += list[i].Price * list[i].Quantity
         }
         binding.totalBalance.text = totalBalance.toString()
     }
@@ -467,7 +614,6 @@ class MainFragment : Fragment() {
     fun print() {
         findBT()
         openBT()
-
         sendData()
 
     }
@@ -479,7 +625,6 @@ class MainFragment : Fragment() {
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
             if (mBluetoothAdapter == null) {
                 Toast.makeText(context, "No bluetooth adapter available", Toast.LENGTH_SHORT).show()
-
                 // viewModel.message.value = "No bluetooth adapter available"
             }
             if (mBluetoothAdapter?.isEnabled == false) {
@@ -581,13 +726,12 @@ class MainFragment : Fragment() {
         }
     }
 
-    /*
- * This will send data to be printed by the bluetooth printer
- */
+    /**
+    This will send data to be printed by the bluetooth printer
+     */
     @Throws(IOException::class)
     fun sendData() {
         try {
-
             // the text typed by the user
 
             var printPic = PrintPic.getInstance()
@@ -606,8 +750,6 @@ class MainFragment : Fragment() {
 
             var draw = printPic.printDraw()
 
-
-
             mmOutputStream!!.write(draw)
             // tell the user data were sent
         } catch (e: NullPointerException) {
@@ -616,7 +758,6 @@ class MainFragment : Fragment() {
         } catch (e: Exception) {
             e.printStackTrace()
             Log.e("PrintErro2r", e.message.toString())
-
         }
         closeBT()
     }
@@ -663,8 +804,7 @@ class MainFragment : Fragment() {
 
         // Draw background
         val paint = Paint(
-            (Paint.ANTI_ALIAS_FLAG
-                    or Paint.LINEAR_TEXT_FLAG)
+            (Paint.ANTI_ALIAS_FLAG or Paint.LINEAR_TEXT_FLAG)
         )
         paint.style = Paint.Style.FILL
         paint.color = Color.WHITE

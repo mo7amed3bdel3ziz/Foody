@@ -3,7 +3,7 @@ package com.hend.calldetailsrecorder.domain
 
 import android.content.ContentResolver
 import android.util.Log
-import com.peter.foody.data.remote.ApiHelper
+import com.peter.foody.framework.datasource.network.ApiHelper
 import com.hend.calldetailsrecorder.data.remote.repository.UploadDetlsCallRepo
 import com.peter.foody.domain.PreferencesUC
 import kotlinx.coroutines.Dispatchers

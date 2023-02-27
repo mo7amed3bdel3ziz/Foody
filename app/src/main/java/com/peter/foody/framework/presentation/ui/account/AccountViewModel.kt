@@ -17,10 +17,14 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
+import java.util.ArrayList
 import javax.inject.Inject
 
 @HiltViewModel
-class AccountViewModel @Inject constructor(private val repository: LoginRepositoryImpl,private val dataBase: BavariaDataBase) :
+class AccountViewModel @Inject constructor(
+    private val repository: LoginRepositoryImpl,
+    private val dataBase: BavariaDataBase
+) :
     ViewModel() {
 
     // val loginLiveData: MutableLiveData<State<Task3<LoginModel>>> by lazy {
@@ -30,7 +34,8 @@ class AccountViewModel @Inject constructor(private val repository: LoginReposito
     val GetBranchLiveData: MutableLiveData<State<Task2<BranchModel>>> by lazy {
         MutableLiveData<State<Task2<BranchModel>>>()
     }
-   // val BranchLiveData = MutableLiveData<Task2<BranchModel>>()
+
+    // val BranchLiveData = MutableLiveData<Task2<BranchModel>>()
     val RequestLiveData = MutableLiveData<Task<RequestModel>>()
     val GetComliveData = MutableLiveData<Task<CompanyModel>>()
     val addItemLiveData = MutableLiveData<Task<AddItemModel>>()
@@ -39,59 +44,59 @@ class AccountViewModel @Inject constructor(private val repository: LoginReposito
     var _exampleText = MutableLiveData<Response<String>>()
 
 
-     fun fetchBothText(ComID: String, AndroidID: String) = viewModelScope.launch {
-         // posting loading state in this livedata for UI
-         _exampleText.postValue(Response.Loading())
+    fun fetchBothText(ComID: String, AndroidID: String) = viewModelScope.launch {
+        // posting loading state in this livedata for UI
+        _exampleText.postValue(Response.Loading())
 
-         repository.getCompanyInfoInRoom(AndroidID).zip( repository.getItemInfo(ComID,AndroidID))
-       //  exampleRepo.getFirstText()
-             // Here, we're calling zip function
-           //  .zip(exampleRepo.getSecondText())
-             { firstText, secondText ->
-                 Log.d("testAPIS", firstText.data!![0].BranchName+"123456")
-                 Log.d("testAPIS", secondText.data!![0].ItemName+"321654")
+        repository.getCompanyInfoInRoom(AndroidID).zip(repository.getItemInfo(ComID, AndroidID))
+        //  exampleRepo.getFirstText()
+        // Here, we're calling zip function
+        //  .zip(exampleRepo.getSecondText())
+        { firstText, secondText ->
+            Log.d("testAPIS", firstText.data!![0].BranchName + "123456")
+            Log.d("testAPIS", secondText.data!![0].ItemName + "321654")
 
-                 // Here we're getting result of both network calls
-                 // i.e. firstText & secondText
+            // Here we're getting result of both network calls
+            // i.e. firstText & secondText
 
-                 // Just returning both the values by simply
-                 // adding them in this lambda
-                 // function of zip and then we'll get this
-                 // result in collect function
-                 // Whatever we returns from here by specifying it,
-                 // we can collect that in collect function
-                 return@zip "$firstText $secondText"
-             }
-             // Making it run on Dispathers.IO
-             // i.e. input/output thread
-             .flowOn(Dispatchers.IO)
-             .catch { e ->
-                 // Here, we'll get an exception if
-                 // any failure occurs in network calls
-                 // So, we're simply posting error message
-                  _exampleText.postValue(Response.Error( e))
-                 Log.d("testAPIS",e.message.toString()+"3gf")
+            // Just returning both the values by simply
+            // adding them in this lambda
+            // function of zip and then we'll get this
+            // result in collect function
+            // Whatever we returns from here by specifying it,
+            // we can collect that in collect function
+            return@zip "$firstText $secondText"
+        }
+            // Making it run on Dispathers.IO
+            // i.e. input/output thread
+            .flowOn(Dispatchers.IO)
+            .catch { e ->
+                // Here, we'll get an exception if
+                // any failure occurs in network calls
+                // So, we're simply posting error message
+                _exampleText.postValue(Response.Error(e))
+                Log.d("testAPIS", e.message.toString() + "3gf")
 
-             }
-             .collect { it ->
-                 // Now here we can collect that value
-                 // which we have passed in lambda
-                 // function of zip i.e. "$firstText $secondText"
-                 // Now simply returning result value as a single
-                 // item/value by wrapping it in Resource.Success class
-                 _exampleText.postValue(Response.Success(it))
-               Log.d("testAPIS",it)
+            }
+            .collect { it ->
+                // Now here we can collect that value
+                // which we have passed in lambda
+                // function of zip i.e. "$firstText $secondText"
+                // Now simply returning result value as a single
+                // item/value by wrapping it in Resource.Success class
+                _exampleText.postValue(Response.Success(it))
+                Log.d("testAPIS", it)
 
-             }
-     }
+            }
+    }
 
     var saveInfoRoomLiveData = MutableLiveData<Response<List<LoginModel>>>()
     fun saveInfoRoom(androidID: String) {
         viewModelScope.launch {
             repository.getCompanyInfoInRoom(androidID).collect {
                 Log.d("saveInfoRoom", it.toLoading())
-                Log.d("saveInfoRoom", it.error?.message +"saveInfoRoom")
-                saveInfoRoomLiveData.value=it
+                Log.d("saveInfoRoom", it.error?.message + "saveInfoRoom")
+                saveInfoRoomLiveData.value = it
 
             }
 
@@ -101,10 +106,10 @@ class AccountViewModel @Inject constructor(private val repository: LoginReposito
     var saveInfoRoomLiveDatapro = MutableLiveData<Response<List<ItemsModel>>>()
     fun saveInfoRoompro(ComID: String, AndroidID: String) {
         viewModelScope.launch {
-        repository.getItemInfo(ComID,AndroidID).collect {
-            Log.d("saveInfoRoom", it.toLoading())
-            Log.d("saveInfoRoom", it.error?.message +"saveInfoRoom")
-            saveInfoRoomLiveDatapro.value=it
+            repository.getItemInfo(ComID, AndroidID).collect {
+                Log.d("saveInfoRoom", it.toLoading())
+                Log.d("saveInfoRoom", it.error?.message + "saveInfoRoom")
+                saveInfoRoomLiveDatapro.value = it
 
             }
 
@@ -173,6 +178,9 @@ class AccountViewModel @Inject constructor(private val repository: LoginReposito
 
         }
     }
+
+
+
 
 
     fun GetComtViewModel() {

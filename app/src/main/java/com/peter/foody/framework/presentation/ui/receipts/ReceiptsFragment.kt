@@ -1,4 +1,4 @@
-package com.peter.foody
+package com.peter.foody.framework.presentation.ui.receipts
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

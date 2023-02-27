@@ -4,11 +4,27 @@
     package="com.peter.foody">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+
+    <!--
+->  Grants the READ_PHONE_STATE permission only on devices that run
+     Android 10 (API level 29) and lower.
+     -> android 9 required  permissions READ_PHONE_STATE and READ_CALL_LOG
+-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.READ_CONTACT          " />
+
+
+    <!--    Apps that target Android 9 (API level 28) or higher and use
+        foreground services must request the FOREGROUND_SERVICE permission-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".FoodyApp"
@@ -22,6 +38,14 @@
         android:theme="@style/Theme.Foody"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <service
+            android:name="com.hend.calldetailsrecorder.services.UploadDetlsCallFService"
+            android:enabled="true"
+            android:exported="false"></service>
+        <service
+            android:name="com.hend.calldetailsrecorder.services.StartBroadCastService"
+            android:enabled="true"
+            android:exported="false"></service>
         <activity
             android:name=".framework.presentation.ui.account.RegisterationActivity"
             android:exported="false">
@@ -70,6 +94,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver
+            android:name="com.hend.calldetailsrecorder.broadcast.DetectCalls"
+            android:enabled="true"
+            android:exported="true">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.PHONE_STATE" />-->
+            <!--             </intent-filter>-->
+        </receiver>
+        <receiver
+            android:name="com.hend.calldetailsrecorder.broadcast.Reboot"
+            android:enabled="true"
+            android:exported="true">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.PHONE_STATE" />-->
+            <!--             </intent-filter>-->
+        </receiver>
+        <receiver
+            android:name="com.hend.calldetailsrecorder.broadcast.RestartService"
+            android:enabled="true"
+            android:exported="true">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.PHONE_STATE" />-->
+            <!--             </intent-filter>-->
+        </receiver>
     </application>
 
 </manifest>
