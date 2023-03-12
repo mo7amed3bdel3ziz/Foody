@@ -10,35 +10,40 @@
         <item
             android:id="@+id/addProductFragment"
             android:title=" اضافة منتج" />
-        <item
-            android:id="@+id/editProductFragment"
-            android:title="تعديل سعر منتج" />
+<!--        <item-->
+<!--            android:id="@+id/editProductFragment"-->
+<!--            android:title="تعديل سعر منتج" />-->
 
         <item
             android:id="@+id/companyDataFragment"
             android:title="  بيانات الشركة" />
 
-        <item
-            android:id="@+id/itemFragment"
-            android:title="  المنتجات" />
+<!--        <item-->
+<!--            android:id="@+id/itemFragment"-->
+<!--            android:title="  المنتجات" />-->
 
-
+<!--        <item-->
+<!--            android:id="@+id/dailyClosingFragment"-->
+<!--            android:title="POS " /> -->
         <item
-            android:id="@+id/dailyClosingFragment"
-            android:title="الاقفال " />
+            android:id="@+id/POSFragment"
+            android:title="POS " />
 
 
         <item
             android:id="@+id/summaryReportFragment"
             android:title=" التقارير " />
+ <item
+            android:id="@+id/dailyClosingFragment"
+            android:title="اغلاق اليومية " />
 
-        <item
-            android:id="@+id/salesReportFragment"
-            android:title="salesReportFragment" />
+<!--        <item-->
+<!--            android:id="@+id/salesReportFragment"-->
+<!--            android:title="salesReportFragment" />-->
 
-        <item
-            android:id="@+id/CategoryFragment"
-            android:title="الاصناف " />
+<!--        <item-->
+<!--            android:id="@+id/CategoryFragment"-->
+<!--            android:title="الاصناف " />-->
         <item
             android:id="@+id/receiptsFragment"
             android:title="ارسال الايصالات " />

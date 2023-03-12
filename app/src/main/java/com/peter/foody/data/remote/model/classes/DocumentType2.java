@@ -1,7 +1,7 @@
 package com.peter.foody.data.remote.model.classes;
 
 public class DocumentType2 {
-    final String COTATION = "\"";
+
 
     public String receiptType="R";
 
@@ -11,11 +11,6 @@ public class DocumentType2 {
 
 
 
-    public String getString(){
-        String result=COTATION+"RECEIPTTYPE"+COTATION+COTATION+receiptType+COTATION;
-        result+=COTATION+"TYPEVERSION"+COTATION+COTATION+typeVersion+COTATION;
-        return  result;
-    }
 
     public String getTypeVersion() {
         return typeVersion;

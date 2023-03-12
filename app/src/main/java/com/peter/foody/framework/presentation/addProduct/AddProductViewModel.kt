@@ -8,7 +8,10 @@ import com.peter.foody.business.model.foods.AddProductModel
 import com.peter.foody.business.model.foods.CategoryModel
 import com.peter.foody.business.repositories.implementation.AddProductRepositoryImpl
 import com.peter.foody.business.repositories.implementation.CategoryRepositoryImpl
+import com.peter.foody.business.repositories.implementation.LoginRepositoryImpl
 import com.peter.foody.business.usecases.State
+import com.peter.foody.data.remote.model.models.AddItemModel
+import com.peter.foody.data.remote.model.models.Task
 import com.peter.foody.framework.datasource.responses.TaskAPI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,8 +20,10 @@ import javax.inject.Inject
 @HiltViewModel
 class AddProductViewModel @Inject constructor(
     private val repository: AddProductRepositoryImpl,
-    private val repositoryCategory: CategoryRepositoryImpl
-) : ViewModel() {
+    private val repositoryCategory: CategoryRepositoryImpl,
+    private val Loginrepository: LoginRepositoryImpl,
+
+    ) : ViewModel() {
     val categoryLiveData = MutableLiveData<State<TaskAPI<CategoryModel>>>()
     val addprodLiveData = MutableLiveData<List<CategoryModel>>()
     fun getcategory() {
@@ -44,4 +49,19 @@ class AddProductViewModel @Inject constructor(
 
         }
     }
+
+
+    //val addItemLiveData = MutableLiveData<Task<AddItemModel>>()
+    val addItemLiveData = MutableLiveData<State<Task<AddproductModel>>>()
+    fun AddItemViewModel(addItemModel: AddproductModel) {
+        viewModelScope.launch {
+            Loginrepository.AddItemRepo(addItemModel).collect {
+                addItemLiveData.value = it
+               // Log.d("addItemLiveData", it.Message)
+            }
+
+
+        }
+    }
+
 }

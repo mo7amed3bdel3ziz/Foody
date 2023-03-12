@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.peter.foody.business.model.reports.SalesReport
 import com.peter.foody.business.repositories.abstraction.FoodRepository
+import com.peter.foody.business.repositories.implementation.ReportRepository
 import com.peter.foody.business.repositories.implementation.ReportRepositoryImpl
 import com.peter.foody.business.usecases.State
 import com.peter.foody.framework.datasource.responses.FoodResponse
@@ -19,7 +20,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 @HiltViewModel
 
-class ReportViewModel @Inject constructor(private val repository: ReportRepositoryImpl) : ViewModel() {
+class ReportViewModel @Inject constructor(private val repository: ReportRepositoryImpl
+                                         , private val reportrepository: ReportRepository
+) : ViewModel() {
 
 
     private val _ReportSales = MutableLiveData<State<TaskAPI<SalesReport>>>()
@@ -37,6 +40,36 @@ class ReportViewModel @Inject constructor(private val repository: ReportReposito
             }
         }
     }
+
+
+
+    var ReportByDateDayLiveData = MutableLiveData<State<ReportModel>>()
+   // var ReportByDateDayLiveData = MutableLiveData<ReportModel>()
+    fun getReportByDateDay(AndroidID: String, date: String) {
+        viewModelScope.launch {
+            reportrepository.getReportByDay( AndroidID, date).collect {
+
+                ReportByDateDayLiveData.value = it
+               // Log.d("saveInfoRoomLiveDatapro", it.toData()?.State.toString())
+
+            }
+
+        }
+    }
+
+
+//    var getReportsLiveData = MutableLiveData<State<ReportModel>>()
+//    fun getReportsVM(AndroidID: String) {
+//        viewModelScope.launch {
+//            reportrepository.getReports( AndroidID).collect {
+//
+//                getReportsLiveData.value = it
+//                Log.d("saveInfoRoomLiveDatapro", it.toData()?.State.toString())
+//
+//            }
+//
+//        }
+//    }
 
 
 }

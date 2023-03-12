@@ -64,7 +64,7 @@
 
                 android:layout_marginTop="24dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_bg_light_orange"
+                android:background="@drawable/btn_bg_orange"
                 android:gravity="center"
                 android:text="الإنتقال للدفع"
                 android:textColor="@color/white"
@@ -146,7 +146,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/offers">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="687dp"
                     android:layout_height="match_parent">
 
 
@@ -154,11 +154,11 @@
                         android:id="@+id/CodeID"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="32dp"
+                        android:layout_marginTop="8dp"
                         android:text="TextView"
                         app:layout_constraintTop_toBottomOf="@+id/textView5"
-                        tools:layout_editor_absoluteX="416dp"
-                        tools:ignore="MissingConstraints" />
+                        tools:ignore="MissingConstraints"
+                        tools:layout_editor_absoluteX="1dp" />
 
                     <Button
                         android:id="@+id/button2"
@@ -283,18 +283,65 @@
                         android:id="@+id/sendOrdersId"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="120dp"
+                        android:layout_margin="8dp"
                         android:text="بيانات المتصل"
-                        app:layout_constraintEnd_toStartOf="@+id/nameTv"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toEndOf="@+id/textinput_cash"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintStart_toEndOf="@+id/textinput_cash" />
+
+                    <Button
+                        android:id="@+id/putNameID"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:layout_marginEnd="36dp"
+                        android:text="اسم المتصل"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/sendOrdersId" />
+
+                    <Button
+                        android:id="@+id/putAddressID"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginEnd="64dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="عنوان المتصل"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/nameEdTxt"
+                        app:layout_constraintTop_toBottomOf="@+id/button2"
+                        app:layout_constraintVertical_bias="1.0" />
+
+                    <EditText
+                        android:id="@+id/addressEdTxt"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:layout_marginTop="4dp"
+                        app:layout_constraintEnd_toStartOf="@id/putAddressID"
+
+                        app:layout_constraintHorizontal_bias="0.849"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/Add"
+                        tools:ignore="NotSibling" />
+
+                    <EditText
+                        android:id="@+id/nameEdTxt"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/putNameID"
+                        app:layout_constraintTop_toTopOf="@+id/putNameID" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/offers"
-
                 android:layout_width="712dp"
                 android:layout_height="283dp"
                 android:layout_gravity="center"

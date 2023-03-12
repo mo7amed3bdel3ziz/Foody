@@ -11,9 +11,11 @@ import com.peter.foody.data.roomContacts.AccountInfo.LoginModel
 import com.peter.foody.data.roomContacts.onlineProduct.ItemsModel
 import com.peter.foody.data.utils.Response
 import com.peter.foody.di.BavariaDataBase
+import com.peter.foody.framework.presentation.editProduct.EditModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
@@ -36,10 +38,9 @@ class AccountViewModel @Inject constructor(
     }
 
     // val BranchLiveData = MutableLiveData<Task2<BranchModel>>()
-    val RequestLiveData = MutableLiveData<Task<RequestModel>>()
     val GetComliveData = MutableLiveData<Task<CompanyModel>>()
     val addItemLiveData = MutableLiveData<Task<AddItemModel>>()
-    val editItemLiveData = MutableLiveData<Task<EditItemModel>>()
+
     val loginLiveData1 = MutableLiveData<Task3<LoginModel>>()
     var _exampleText = MutableLiveData<Response<String>>()
 
@@ -94,8 +95,7 @@ class AccountViewModel @Inject constructor(
     fun saveInfoRoom(androidID: String) {
         viewModelScope.launch {
             repository.getCompanyInfoInRoom(androidID).collect {
-                Log.d("saveInfoRoom", it.toLoading())
-                Log.d("saveInfoRoom", it.error?.message + "saveInfoRoom")
+
                 saveInfoRoomLiveData.value = it
 
             }
@@ -104,11 +104,10 @@ class AccountViewModel @Inject constructor(
     }
 
     var saveInfoRoomLiveDatapro = MutableLiveData<Response<List<ItemsModel>>>()
-    fun saveInfoRoompro(ComID: String, AndroidID: String) {
+    fun saveItems(ComID: String, AndroidID: String) {
         viewModelScope.launch {
             repository.getItemInfo(ComID, AndroidID).collect {
-                Log.d("saveInfoRoom", it.toLoading())
-                Log.d("saveInfoRoom", it.error?.message + "saveInfoRoom")
+
                 saveInfoRoomLiveDatapro.value = it
 
             }
@@ -168,11 +167,12 @@ class AccountViewModel @Inject constructor(
 //  }
 
 
+    val RequestLiveData = MutableLiveData<State<Task<RequestModel>>>()
     fun setRequestViewModel(add: RequestModel) {
         viewModelScope.launch {
             repository.GetRequestAPIRepo(add).collect {
                 RequestLiveData.value = it
-                Log.d("RequestLiveData", it.Message)
+//                Log.d("RequestLiveData", it.toData()!!.Message)
             }
 
 
@@ -182,6 +182,11 @@ class AccountViewModel @Inject constructor(
 
 
 
+     fun saveInfoCom(){
+         viewModelScope.launch {
+
+         }
+     }
 
     fun GetComtViewModel() {
         viewModelScope.launch {
@@ -195,28 +200,46 @@ class AccountViewModel @Inject constructor(
     }
 
 
-    fun AddItemViewModel(addItemModel: AddItemModel) {
-        viewModelScope.launch {
-            repository.AddItemRepo(addItemModel).collect {
-                addItemLiveData.value = it
-                Log.d("addItemLiveData", it.Message)
-            }
+//    fun AddItemViewModel(addItemModel: AddItemModel) {
+//        viewModelScope.launch {
+//            repository.AddItemRepo(addItemModel).collect {
+//                addItemLiveData.value = it
+//                Log.d("addItemLiveData", it.Message)
+//            }
+//
+//
+//        }
+//    }
 
-
-        }
-    }
-
-
-    fun EditItemViewModel(add: EditItemModel) {
+    val editItemLiveData = MutableLiveData<Task<EditModel>>()
+    fun EditItemViewModel(add: EditModel) {
         viewModelScope.launch {
             repository.EditItemRepo(add).collect {
                 editItemLiveData.value = it
                 Log.d("addItemLiveData", it.Message)
             }
-
-
         }
     }
+
+    //var saveInfoLoginLiveDatapro = MutableLiveData<LoginModel>()
+
+
+    fun saveInfoLogin( add: LoginModel) {
+        viewModelScope.launch {
+            repository.setLoginDataOnDB( add)
+        }
+    }
+
+
+    val saveInfoLoginLiveDatapro = MutableLiveData<LoginModel>()
+    fun getsavedInfoLogin( )= flow<LoginModel> {
+        viewModelScope.launch {
+            repository.getLoginDataInDB().collect{
+                saveInfoLoginLiveDatapro.value =it
+            }
+        }
+    }
+
 
 
 }

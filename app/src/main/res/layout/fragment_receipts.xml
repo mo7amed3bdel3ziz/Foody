@@ -33,19 +33,20 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:listitem="@layout/receipt_status_layer" />
+                tools:listitem="@layout/sells_layout"
+                />
 
-            <ProgressBar
-                android:id="@+id/progressBar4"
-                style="?android:attr/progressBarStyle"
+<!--            <ProgressBar-->
+<!--                android:id="@+id/progressBar4"-->
+<!--                style="?android:attr/progressBarStyle"-->
 
-                android:layout_width="122dp"
-                android:layout_height="148dp"
-                android:shadowColor="@color/red"
-                app:layout_constraintBottom_toBottomOf="@+id/recyclerView"
-                app:layout_constraintEnd_toEndOf="@+id/paybtn"
-                app:layout_constraintStart_toStartOf="@+id/paybtn"
-                app:layout_constraintTop_toTopOf="parent" />
+<!--                android:layout_width="122dp"-->
+<!--                android:layout_height="148dp"-->
+<!--                android:shadowColor="@color/red"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/recyclerView"-->
+<!--                app:layout_constraintEnd_toEndOf="@+id/paybtn"-->
+<!--                app:layout_constraintStart_toStartOf="@+id/paybtn"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
 
 
             <Button
@@ -60,6 +61,14 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/editTextTextPersonName"
+                android:layout_width="228dp"
+                android:layout_height="90dp"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

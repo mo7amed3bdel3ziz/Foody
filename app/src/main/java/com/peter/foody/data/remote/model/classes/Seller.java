@@ -45,18 +45,7 @@ public class Seller {
         this.activityCode = activityCode;
     }
 
-    final String COTATION = "\"";
 
-    public String getString(){
-        String result=COTATION+"RIN"+COTATION+COTATION+rin+COTATION;
-        result+=COTATION+"COMPANYTRADENAME"+COTATION+COTATION+companyTradeName+COTATION;
-        result+=COTATION+"BRANCHCODE"+COTATION+COTATION+branchCode+COTATION;
-        result+=COTATION+"BRANCHADDRESS"+COTATION+branchAddress.getString();
-        result+=COTATION+"DEVICESERIALNUMBER"+COTATION+COTATION+deviceSerialNumber+COTATION;
-        result+=COTATION+"SYNDICATELICENSENUMBER"+COTATION+COTATION+syndicateLicenseNumber+COTATION;
-        result+=COTATION+"ACTIVITYCODE"+COTATION+COTATION+activityCode+COTATION;
-        return  result;
-    }
 
     public String getRin() {
         return rin;
@@ -114,7 +103,5 @@ public class Seller {
         this.activityCode = activityCode;
     }
 
-    public String getCOTATION() {
-        return COTATION;
-    }
+
 }

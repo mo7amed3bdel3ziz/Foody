@@ -20,7 +20,7 @@ class CompanyViewModel @Inject constructor(private val dataBase: BavariaDataBase
         viewModelScope.launch {
             dataBase.loginInfoDao().getContacts().collect {
                 getComDataLiveData.value=it.get(0)
-                  Log.d("accountviewModel",it.get(0).BranchName)
+                //  Log.d("accountviewModel",it.get(0).BranchName)
 
             }
         }

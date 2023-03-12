@@ -5,13 +5,12 @@
 
     <data>
         <variable
-            name="salesReport"
-            type="com.peter.foody.business.model.reports.SalesReport" />
+            name="data"
+            type="com.peter.foody.framework.presentation.reports.DataModel" />
     </data>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-
         android:layout_margin="1dp"
         android:layout_height="wrap_content"
         app:cardCornerRadius="10dp"
@@ -44,7 +43,7 @@
 -->
         <TextView
             android:id="@+id/total_v"
-            android:text='@{String.valueOf(salesReport.totalPrice)}'
+            android:text='@{String.valueOf(data.total)}'
 
 
             android:layout_width="wrap_content"
@@ -55,16 +54,16 @@
             tools:text="total" />
 
 
-        <TextView
-            android:id="@+id/price_v"
+<!--        <TextView-->
+<!--            android:id="@+id/price_v"-->
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="0.16"
-            android:text='@{String.valueOf(salesReport.billDate)}'
-            android:gravity="center"
-            tools:text="time" />
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_weight="0.16"-->
+<!--            android:text='@{String.valueOf(data.)}'-->
+<!--            android:gravity="center"-->
+<!--            tools:text="time" />-->
 
 
 
@@ -76,7 +75,7 @@
             android:layout_gravity="center"
             android:layout_weight="0.16"
             android:background="@android:drawable/editbox_background"
-            android:text='@{String.valueOf(salesReport.totalQty)}'
+            android:text='@{String.valueOf(data.quantity)}'
             android:gravity="center"
             tools:text="1"/>
 
@@ -87,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="0.16"
-            android:text='@{salesReport.items}'
+            android:text='@{data.description}'
             android:gravity="center"
             tools:text="name" />
 

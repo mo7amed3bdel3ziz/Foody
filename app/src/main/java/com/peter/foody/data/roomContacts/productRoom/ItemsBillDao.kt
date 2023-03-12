@@ -13,15 +13,19 @@ interface ItemsBillDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertContacts(user: ItemsBill?)
 
+    @Insert
+       (onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertList(user: List<ItemsBill>)
+
     // @Query("Select*from ItemsBill")
             @Query("Select * from ItemsBill")
     fun getContacts(): Flow<List<ItemsBill>>
 
     @Query("Select * from ItemsBill  WHERE IDBill= :ID")
-    fun getlistItems(ID: String?): Flow<List<ItemsBill?>?>?
+    fun getlistItems(ID: String?): Flow<List<ItemsBill>>
 
     @Query("Select * from ItemsBill  WHERE IDBill= :ID")
-    fun getOneItems(ID: String?): Flow<ItemsBill?>?
+    fun getOneItems(ID: String?): Flow<ItemsBill>
 
     @Query("DELETE FROM ItemsBill")
     fun delete()

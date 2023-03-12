@@ -11,5 +11,7 @@ public class Receipts {
 
     public void setReceipts(ArrayList<Root> receipts) {
         this.receipts = receipts;
+
     }
+
 }

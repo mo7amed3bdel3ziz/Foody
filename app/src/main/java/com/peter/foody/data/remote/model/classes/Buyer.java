@@ -2,7 +2,7 @@ package com.peter.foody.data.remote.model.classes;
 
 
 public class Buyer {
-    final String COTATION = "\"";
+
 
     public String type;
 
@@ -25,15 +25,6 @@ public class Buyer {
         this.mobileNumber = mobileNumber;
         this.paymentNumber = paymentNumber;
     }
-    public  String getString(){
-        String result=COTATION+"TYPE"+COTATION+COTATION+type+COTATION;
 
-        result+=  COTATION+"ID"+COTATION+COTATION+id+COTATION;
-        result+=COTATION+"NAME"+COTATION+COTATION+name+COTATION;
-       // result+=COTATION+"TYPE"+COTATION+COTATION+type+COTATION;
-        result+=COTATION+"MOBILENUMBER"+COTATION+COTATION+mobileNumber+COTATION;
-        result+=COTATION+"PAYMENTNUMBER"+COTATION+COTATION+paymentNumber+COTATION;
-        return  result;
-    }
 
 }

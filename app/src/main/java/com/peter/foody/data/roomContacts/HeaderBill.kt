@@ -1,46 +1,37 @@
-package com.hend.calldetailsrecorder.data.roomContacts
+package com.peter.foody.data.roomContacts
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "HeaderBill", indices = [Index(value = ["LastUUID"], unique = true)])
+@Entity(tableName = "HeaderBill", indices = [Index(value = ["id"], unique = true)])
 
 data class HeaderBill(
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0,
+    var id: Int ,
 
-    @ColumnInfo(name = "UUID")
-    var UUID: String? = null,
 
     @ColumnInfo(name = "BillNumber")
-    var BillNumber: String? = null,
+    var BillNumber: String,
 
 
     @ColumnInfo(name = "InvoiceDate")
-    var InvoiceDate: String? = null,
+    var InvoiceDate: String,
 
-    @ColumnInfo(name = "netPrice")
-    var netPrice: Double? = null,
+     @ColumnInfo(name = "netPrice")
+     var netPrice: Double,
 
     @ColumnInfo(name = "tax")
-    var tax: Double? = null,
+    var tax: Double,
 
     @ColumnInfo(name = "totalPrice")
-    var totalPrice: Double? = null,
+    var totalPrice: Double,
 
     @ColumnInfo(name = "Link")
-    var Link: String? = null,
-
-
-    @ColumnInfo(name = "LastUUID")
-    var LastUUID: String? = null,
-
-    @ColumnInfo(name = "IDBill")
-    var IDBill: String? = null,
+    var Link: String,
 
 
     @ColumnInfo(name = "InvoiceType")
-    var InvoiceType: String? = null
+    var InvoiceType: String
 )

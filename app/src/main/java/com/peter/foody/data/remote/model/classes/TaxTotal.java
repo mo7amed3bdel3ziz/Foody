@@ -16,13 +16,7 @@ public class TaxTotal {
         this.amount = amount;
     }
 
-    final String COTATION = "\"";
 
-    public String getString(){
-        String result=COTATION+"TAXTOTALS"+COTATION;
-                //+COTATION+taxTotal+COTATION;
-        result+=COTATION+"TAXTYPE"+COTATION+COTATION+taxType+COTATION;
-        result+=COTATION+"AMOUNT"+COTATION+COTATION+amount+COTATION;
-        return  result;
-    }
+
+
 }

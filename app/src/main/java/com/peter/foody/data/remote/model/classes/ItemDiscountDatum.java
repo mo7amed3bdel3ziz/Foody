@@ -10,12 +10,7 @@ public class ItemDiscountDatum {
 
     public String description="itemDiscount";
 
-    final String COTATION = "\"";
 
-    public String getString(){
-        String result=COTATION+"ITEMDISCOUNTDATA"+COTATION;
-        result+=COTATION+"AMOUNT"+COTATION+COTATION+amount+COTATION;
-        result+=COTATION+"DESCRIPTION"+COTATION+COTATION+description+COTATION;
-        return  result;
-    }
+
+
 }

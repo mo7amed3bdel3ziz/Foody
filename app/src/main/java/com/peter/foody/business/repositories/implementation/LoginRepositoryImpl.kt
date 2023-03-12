@@ -9,6 +9,8 @@ import com.peter.foody.data.roomContacts.AccountInfo.LoginModel
 import com.peter.foody.data.utils.networkBoundResource
 import com.peter.foody.di.BavariaDataBase
 import com.peter.foody.framework.datasource.network.ApiService
+import com.peter.foody.framework.presentation.addProduct.AddproductModel
+import com.peter.foody.framework.presentation.editProduct.EditModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.flow
@@ -156,19 +158,26 @@ class LoginRepositoryImpl @Inject constructor(
 //    }
 
 
-    fun GetRequestAPIRepo(add: RequestModel) = flow<Task<RequestModel>> {
+//    fun GetRequestAPIRepo(add: RequestModel) = flow<Task<RequestModel>> {
+//
+//        kotlin.runCatching {
+//            api.GetRequestAPI(add)!!.await()
+//        }.onFailure {
+//
+//        }.onSuccess {
+//
+//            emit(it)
+//        }
+//
+//    }.flowOn(IO)
 
+    fun GetRequestAPIRepo(add: RequestModel) = wrapWithFlowApi(
 
-        kotlin.runCatching {
-            api.GetRequestAPI(add)!!.await()
-        }.onFailure {
-
-        }.onSuccess {
-
-            emit(it)
+        fetch = {
+            api.GetRequestAPI(add)
         }
+    ).flowOn(IO)
 
-    }.flowOn(IO)
 
 
     fun GetComRepo() = flow<Task<CompanyModel>> {
@@ -206,18 +215,28 @@ class LoginRepositoryImpl @Inject constructor(
 
 
 
-    fun AddItemRepo(add: AddItemModel) = flow<Task<AddItemModel>> {
-        kotlin.runCatching {
-            api.AddItemAPI(add)!!.await()
-        }.onFailure {
+//    fun AddItemRepo(add: AddItemModel) = flow<Task<AddItemModel>> {
+//        kotlin.runCatching {
+//            api.AddItemAPI(add)!!.await()
+//        }.onFailure {
+//
+//        }.onSuccess {
+//            emit(it)
+//        }
+//    }.flowOn(IO)
 
-        }.onSuccess {
-            emit(it)
+
+
+    fun AddItemRepo(add: AddproductModel) = wrapWithFlowApi(
+
+        fetch = {
+            api.AddItemAPI(add)
         }
-    }.flowOn(IO)
+    ).flowOn(IO)
 
 
-    fun EditItemRepo(add: EditItemModel) = flow<Task<EditItemModel>> {
+
+    fun EditItemRepo(add: EditModel) = flow<Task<EditModel>> {
         kotlin.runCatching {
             api.EditItemAPI(add)!!.await()
         }.onFailure {
@@ -305,4 +324,25 @@ class LoginRepositoryImpl @Inject constructor(
         ).flowOn(Dispatchers.IO)
 
 
+    var setloginDataBase = dataBase.loginInfoDao()
+    suspend fun setLoginDataOnDB(add: LoginModel){
+
+        dataBase.withTransaction {
+            setloginDataBase.insertContacts(add)
+        }
+    }
+
+
+
+
+
+    var getloginDataBase = dataBase.loginInfoDao()
+    suspend fun getLoginDataInDB()= flow<LoginModel>{
+
+        dataBase.withTransaction {
+            getloginDataBase.getContacts()
+        }
+    }.flowOn(IO)
+
 }
+

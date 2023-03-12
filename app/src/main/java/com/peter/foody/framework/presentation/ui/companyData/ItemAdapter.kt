@@ -26,6 +26,9 @@ class ItemAdapter (val onOfferClickListener: OnOfferClickListener) :
         holder.itemView.setOnClickListener {
             getItem(position)?.let { it1 -> onOfferClickListener.onClick(it1) }
         }
+      //  holder.editProductId
+
+
     }
 
     companion object DiffCallback : DiffUtil.ItemCallback<ItemsModel>() {

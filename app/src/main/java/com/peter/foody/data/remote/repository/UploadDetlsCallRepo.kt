@@ -3,7 +3,9 @@ package com.hend.calldetailsrecorder.data.remote.repository
 import android.content.ContentResolver
 import android.provider.CallLog
 import android.util.Log
+import com.hend.calldetailsrecorder.common.Constant.Companion.KEY
 import com.hend.calldetailsrecorder.common.extensions.getPhoneNumber
+import com.hend.calldetailsrecorder.data.remote.model.CallResponse
 import com.peter.foody.framework.datasource.network.ApiHelper
 import com.peter.foody.domain.PreferencesUC
 import kotlinx.coroutines.Dispatchers
@@ -35,13 +37,13 @@ class UploadDetlsCallRepo(apiHelper: ApiHelper, preferencesUC: PreferencesUC, co
             Log.d("isEnteredRunning",number+"getPhoneNumber");
 
             Log.i("test","contentResolver + number = $number")
-         //  val response: CallResponse? = mApiHelper?.sentRingingAction(KEY, number)
-         //  preferencesUC?.saveRingCallId(response!!.ringCallId)
-         //  preferencesUC?.saveStatus(response!!.status)
-         //  Log.i(
-         //      "test", "sentRingingAction ringId = ${preferencesUC!!.getRingCallId()}" +
-         //              "status = ${preferencesUC!!.getStatus()} response = $response"
-         //  )
+            val response: CallResponse? = mApiHelper?.sentRingingAction(KEY, number)
+            preferencesUC?.saveRingCallId(response!!.ringCallId)
+            preferencesUC?.saveStatus(response!!.status)
+            Log.i(
+                "test", "sentRingingAction ringId = ${preferencesUC!!.getRingCallId()}" +
+                        "status = ${preferencesUC!!.getStatus()} response = $response"
+            )
         }
 
     }

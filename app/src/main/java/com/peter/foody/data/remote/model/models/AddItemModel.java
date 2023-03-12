@@ -5,7 +5,7 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "AddItemModel",indices = @Index(value = {"ItemName"},unique = true))
+@Entity(tableName = "AddItemModel", indices = @Index(value = {"ItemName"}, unique = true))
 public class AddItemModel {
     @PrimaryKey(autoGenerate = true)
     int Record_ID;
@@ -28,20 +28,30 @@ public class AddItemModel {
     String UnitType;
     @ColumnInfo(name = "Price")
     double Price;
+    @ColumnInfo(name = "Item_Category")
+    String Item_Category;
 
-//    public AddItemModel(int record_ID, String itemName, String androidID, String barcode, String description, String editor, String itemType, String itemCode, String unitType, double price)
-//    {
-//        Record_ID = record_ID;
-//        ItemName = itemName;
-//        AndroidID = androidID;
-//        Barcode = barcode;
-//        Description = description;
-//        Editor = editor;
-//        ItemType = itemType;
-//        ItemCode = itemCode;
-//        UnitType = unitType;
-//        Price = price;
-//    }
+    public AddItemModel(int record_ID, String itemName, String androidID, String barcode, String description, String editor, String itemType, String itemCode, String unitType, double price, String item_Category) {
+        Record_ID = record_ID;
+        ItemName = itemName;
+        AndroidID = androidID;
+        Barcode = barcode;
+        Description = description;
+        Editor = editor;
+        ItemType = itemType;
+        ItemCode = itemCode;
+        UnitType = unitType;
+        Price = price;
+        Item_Category = item_Category;
+    }
+
+    public String getItem_Category() {
+        return Item_Category;
+    }
+
+    public void setItem_Category(String item_Category) {
+        Item_Category = item_Category;
+    }
 
     public String getAndroidID() {
         return AndroidID;
@@ -51,13 +61,13 @@ public class AddItemModel {
         AndroidID = androidID;
     }
 
-  public int getRecord_ID() {
-      return Record_ID;
-  }
+    public int getRecord_ID() {
+        return Record_ID;
+    }
 
-  public void setRecord_ID(int record_ID) {
-      Record_ID = record_ID;
-  }
+    public void setRecord_ID(int record_ID) {
+        Record_ID = record_ID;
+    }
 
     public String getItemName() {
         return ItemName;

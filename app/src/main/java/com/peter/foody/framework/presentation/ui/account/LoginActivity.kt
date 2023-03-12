@@ -20,8 +20,10 @@ import com.hend.calldetailsrecorder.services.StartBroadCastService
 import com.peter.foody.R.layout.activity_login
 import com.peter.foody.business.usecases.State
 import com.peter.foody.data.utils.Response
+import com.peter.foody.data.utils.SharedPrefUtil
 import com.peter.foody.databinding.ActivityLoginBinding
 import com.peter.foody.framework.presentation.MainDrawerActivity
+import com.peter.foody.framework.presentation.main.MainFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -34,7 +36,8 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(activity_login)
+        binding =ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
 
         registerBroadCast()
@@ -59,48 +62,51 @@ class LoginActivity : AppCompatActivity() {
             contentResolver,
             Settings.Secure.ANDROID_ID
         )
-
-        viewModel.saveInfoRoom(androidId)
-        viewModel.saveInfoRoomLiveDatapro.observe(this) {
-            when (it) {
-                is Response.Loading -> Log.d("azedfeeizad34", it.toLoading())
-                is Response.Success -> {
-                    Log.d("azedfeeizad34", it.data!!.get(0).Barcode)
-                }
-                is Response.Error -> Log.d("azedfeeizad34", it.error!!.message.toString())
-            }
-
-        }
-
-
-
-        viewModel.saveInfoRoomLiveData.observe(this) {
-            when (it) {
-                is Response.Loading -> Log.d("azedfeeiza34", it.toLoading())
-                is Response.Success -> {
-                    Log.d("azedfeeiza34", it.data!!.get(0).BranchName)
-                }
-                is Response.Error -> Log.d("azedfeeiza34", it.error!!.message.toString())
-            }
-
-        }
-        viewModel.saveInfoRoompro("1", androidId)
-
-        viewModel._exampleText.observe(this) {
-            when (it) {
-                is Response.Loading -> Log.d("aziza34", it.toLoading())
-                is Response.Success -> {
-
-                    //  Log.d("aziza34", it.data.toString()+"11111111")
-                    val intent = Intent(this, MainDrawerActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
-                is Response.Error -> Log.d("aziza34", it.error!!.message.toString() + "222222")
-
-            }
-            //   Log.d("aziza2", it.data.)
-        }
+//        Log.d("contentResolver",androidId)
+//        val sharedPrefUtil = SharedPrefUtil()
+//        sharedPrefUtil.save(this, "androidId", androidId);
+//
+//        viewModel.saveInfoRoom(androidId)
+//        viewModel.saveInfoRoomLiveDatapro.observe(this) {
+//            when (it) {
+//                is Response.Loading -> Log.d("azedfeeizad34", it.toLoading())
+//                is Response.Success -> {
+//                    Log.d("azedfeeizad34", it.data!!.get(0).Barcode)
+//                }
+//                is Response.Error -> Log.d("azedfeeizad34", it.error!!.message.toString())
+//            }
+//
+//        }
+//
+//
+//
+//        viewModel.saveInfoRoomLiveData.observe(this) {
+//            when (it) {
+//                is Response.Loading -> Log.d("azedfeeiza34", it.toLoading())
+//                is Response.Success -> {
+//                    Log.d("azedfeeiza34", it.data!!.get(0).BranchName)
+//                }
+//                is Response.Error -> Log.d("azedfeeiza34", it.error!!.message.toString())
+//            }
+//
+//        }
+//      //  viewModel.saveInfoRoompro(, androidId)
+//
+//        viewModel._exampleText.observe(this) {
+//            when (it) {
+//                is Response.Loading -> Log.d("aziza34", it.toLoading())
+//                is Response.Success -> {
+//
+//                    //  Log.d("aziza34", it.data.toString()+"11111111")
+//                    val intent = Intent(this, MainDrawerActivity::class.java)
+//                    startActivity(intent)
+//                    finish()
+//                }
+//                is Response.Error -> Log.d("aziza34", it.error!!.message.toString() + "222222")
+//
+//            }
+//            //   Log.d("aziza2", it.data.)
+//        }
 
         viewModel.loginInfoCombVM(androidId)
         viewModel.loginInfoCombVLiveData.observe(this) {
@@ -113,29 +119,28 @@ class LoginActivity : AppCompatActivity() {
                         //your Request is pending
 
                         binding.textView5.text = "your Request is pending"
-                        Toast.makeText(
-                            applicationContext,
-                            it.data.State.toString() + "your Request is pending",
-                            Toast.LENGTH_SHORT
-                        ).show()
-//                    binding.textView5.setText("your Request is pending")
+                        Toast.makeText(applicationContext, it.data.State.toString() + "your Request is pending", Toast.LENGTH_SHORT).show()
+                    binding.textView5.setText("your Request is pending")
                     } else if (it.data!!.State == 1) {
                         //Successfully Login
-                        // viewModel.saveInfoRoom(androidId)
-                        viewModel.fetchBothText(androidId, "1")
+                       // viewModel.saveInfoRoom(androidId)
+
+                        viewModel.saveInfoLogin(it.data.item)
+                        Log.d("saveInfoLogin",it.data.item.Name)
+                        viewModel.saveItems(it.data.item.comid.toString(),it.data.item.AndroidID)
 
 
+                      val intent = Intent(this, MainDrawerActivity::class.java)
+                       startActivity(intent)
+                        finish()
                         // val intent = Intent(this, MainDrawerActivity::class.java)
                         // startActivity(intent)
                         // finish()
+
                     } else if (it.data!!.State == 2) {
                         //your Request has been rejected
                         Log.d("state", it.data.State.toString())
-                        Toast.makeText(
-                            applicationContext,
-                            "State is " + it.data.State,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(applicationContext, "State is " + it.data.State, Toast.LENGTH_SHORT).show()
                         //your Request has been rejected
 
                         //    val intent = Intent(this, AccountActivity::class.java)
@@ -143,11 +148,7 @@ class LoginActivity : AppCompatActivity() {
                         finish()
                     } else if (it.data!!.State == 3) {
                         //your Machine has been suspended
-                        Toast.makeText(
-                            applicationContext,
-                            it.data.State.toString() + "your Machine has been suspended",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(applicationContext, it.data.State.toString() + "your Machine has been suspended", Toast.LENGTH_SHORT).show()
 
                         //your Machine has been suspended
                         binding.textView5.text = "your Machine has been suspended"
@@ -156,11 +157,7 @@ class LoginActivity : AppCompatActivity() {
 
                     } else if (it.data!!.State == 4) {
                         //go to registeration first
-                        Toast.makeText(
-                            applicationContext,
-                            it.data.State.toString() + "go to registeration first",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(applicationContext, it.data.State.toString() + "go to registeration first", Toast.LENGTH_SHORT).show()
 
                         //go to registeration first
 

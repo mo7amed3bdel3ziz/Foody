@@ -97,36 +97,7 @@ public class ItemDatum {
 
     }
 
-    final String COTATION = "\"";
-    public String getString(){
-        String result=COTATION+"ITEMDATA"+COTATION;
-        result+=COTATION+"INTERNALCODE"+COTATION+COTATION+internalCode+COTATION;
-        result+=COTATION+"DESCRIPTION"+COTATION+COTATION+description+COTATION;
-        result+=COTATION+"ITEMTYPE"+COTATION+COTATION+itemType+COTATION;
-        result+=COTATION+"ITEMCODE"+COTATION+COTATION+itemCode+COTATION;
-        result+=COTATION+"UNITTYPE"+COTATION+COTATION+unitType+COTATION;
-        result+=COTATION+"QUANTITY"+COTATION+COTATION+quantity+COTATION;
-        result+=COTATION+"UNITPRICE"+COTATION+COTATION+unitPrice+COTATION;
-        result+=COTATION+"NETSALE"+COTATION+COTATION+netSale+COTATION;
-        result+=COTATION+"TOTALSALE"+COTATION+COTATION+totalSale+COTATION;
-        result+=COTATION+"TOTAL"+COTATION+COTATION+total+COTATION;
-        //Loop For each item in commercialDiscountData
-        result+=COTATION+"COMMERCIALDISCOUNTDATA"+COTATION;
-        for (CommercialDiscountDatum itemDatum : commercialDiscountData) {
-            result+=itemDatum.getString();
-        }
-        //Loop in each item in itemDiscountData
-        result+=COTATION+"ITEMDISCOUNTDATA"+COTATION;
-        for (ItemDiscountDatum itemDatum : itemDiscountData) {
-            result+=itemDatum.getString();
-        }
-        result+=COTATION+"VALUEDIFFERENCE"+COTATION+COTATION+valueDifference+COTATION;
-        result+=COTATION+"TAXABLEITEMS"+COTATION;
-        for (TaxableItem itemDatum : taxableItems) {
-            result+=itemDatum.getString();
-        }
-        return  result;
-    }
+
 
 
 }

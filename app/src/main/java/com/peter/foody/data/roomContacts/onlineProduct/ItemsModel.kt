@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import ir.mirrajabi.searchdialog.core.Searchable
 
 @Entity(tableName = "ItemsModel", indices = [Index(value = ["Record_ID"], unique = true)])
 
@@ -39,4 +40,48 @@ data class ItemsModel(
 
     @ColumnInfo(defaultValue = "")
     var Quantity: Int
-)
+): Searchable {
+
+    override fun getTitle(): String {
+        return ItemName!!
+    }
+
+    fun getBarcodee(): String {
+        return Barcode
+    }
+
+     fun getDescriptionn(): String {
+        return Description!!
+    }
+
+     fun getEditorr(): String {
+        return Editor!!
+    }
+
+    fun getDatee(): String {
+        return Date!!
+    }
+
+    fun getItemTypee(): String {
+        return ItemType!!
+    }
+
+    fun getItemCodee(): Int {
+        return ItemCode!!
+    }
+    fun getUnitTypee(): String {
+        return UnitType!!
+    }
+
+    fun getPricee(): Double {
+        return Price!!
+    }
+
+    fun getQuantityy(): Int {
+        return Quantity!!
+    }
+
+
+
+
+}

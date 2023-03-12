@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import com.peter.foody.business.usecases.State
 import com.peter.foody.data.remote.model.models.BranchModel
 import com.peter.foody.data.remote.model.models.RequestModel
+import com.peter.foody.data.utils.SharedPrefUtil
 import com.peter.foody.databinding.ActivityRegisterationBinding
 import dagger.hilt.android.AndroidEntryPoint
 import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat
@@ -38,6 +39,11 @@ class RegisterationActivity : AppCompatActivity() {
             contentResolver,
             Settings.Secure.ANDROID_ID
         )
+
+        val sharedPrefUtil = SharedPrefUtil()
+        sharedPrefUtil.save(this, "androidId", androidId);
+
+
       //  networkBoundResource()
 
         binding.androidId.text=androidId
@@ -69,6 +75,7 @@ class RegisterationActivity : AppCompatActivity() {
                 is State.Success -> {
                     binding.progressBar.isVisible=false
                     if (it.data.State==2){
+                        listBranch .clear()
                         Toast.makeText(applicationContext, "لا يوجد فروع لهذة الشركة", Toast.LENGTH_SHORT).show()
                         Toast.makeText(applicationContext, "لا يوجد فروع لهذة الشركة", Toast.LENGTH_SHORT).show()
                         Toast.makeText(applicationContext, "لا يوجد فروع لهذة الشركة", Toast.LENGTH_SHORT).show()
@@ -88,7 +95,31 @@ class RegisterationActivity : AppCompatActivity() {
 
         binding.SendRequestId.setOnClickListener {
 
+
+            var com2 =""
+            var ComPlusId = binding.com.text.toString()
+            val BafferComId: StringBuffer? = splitString(ComPlusId)
+            val CompanyId: String = BafferComId.toString()
+            com2 =CompanyId
+            if (comm ==com2){
             if (CheckAllFields()) {
+            viewModel.branchInfoCombVM(CompanyId)
+
+            viewModel.RequestLiveData.observe(this){
+                when (it) {
+                    is State.Loading-> Toast.makeText(applicationContext,"جاري التحميل", Toast.LENGTH_SHORT).show()
+                    is State.Success -> {
+                        Toast.makeText(applicationContext,"تم ارسال الطلب", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, LoginActivity::class.java)
+                        startActivity(intent)
+                        finish()
+
+                    }
+
+                    is State.Error ->   Toast.makeText(applicationContext,"خطا", Toast.LENGTH_SHORT).show()
+
+                }
+            }
                 requestModel = RequestModel(
                     "",
                     branchname,
@@ -100,6 +131,18 @@ class RegisterationActivity : AppCompatActivity() {
                 viewModel.setRequestViewModel(requestModel!!)
                 Log.d("androidId",androidId)
             }
+            }else
+            {
+                Toast.makeText(applicationContext,"خطا ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext,"خطا ", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext,"خطا ", Toast.LENGTH_SHORT).show()
+                binding.com.setText("")
+                binding.textView21.setText("")
+
+
+            }
+
+
            // val BranchName = binding.textView21.text.toString()
              // val ID = binding.textView12.text.toString()
              //  binding.comID.text.toString()

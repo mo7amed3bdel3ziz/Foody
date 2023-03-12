@@ -2,11 +2,16 @@ package com.peter.foody.framework.datasource.network
 
 
 import com.hend.calldetailsrecorder.data.remote.model.CallResponse
+import com.peter.foody.data.remote.model.classes.Receipts
 import com.peter.foody.data.remote.model.classes.Root
 import com.peter.foody.data.remote.model.models.*
 import com.peter.foody.data.roomContacts.AccountInfo.LoginModel
 import com.peter.foody.data.roomContacts.onlineProduct.ItemsModel
 import com.peter.foody.framework.datasource.responses.TaskAPI
+import com.peter.foody.framework.presentation.addProduct.AddproductModel
+import com.peter.foody.framework.presentation.editProduct.EditModel
+import com.peter.foody.framework.presentation.reports.ReportModel
+import com.peter.foody.framework.presentation.reports.TotalReportModel
 
 import kotlinx.coroutines.Deferred
 import retrofit2.http.*
@@ -202,9 +207,7 @@ interface ApiService {
     ////   Single<InFoModel>getInfo(
     ////           @Body int x);
     //
-    @Headers("Content-Type: application/json")
-    @POST("api2/AndroidReciets/SetBill")
-    fun getProductm(@Body root: Root?): Deferred<BillReturn?>?
+
 
 //    @Headers("Content-Type: application/json")
 //    @POST("api2/AndroidReciets/SetListBill")
@@ -219,6 +222,10 @@ interface ApiService {
 //       @Query("ComID") ComID: String?,
 //       @Query("AndroidID") AndroidID: String?
 //   ): Deferred<TaskAPI<ItemsModel?>?>?
+
+    @Headers("Content-Type: application/json")
+    @POST("api2/AndroidReciets/SetBill")
+    fun getProductm(@Body root: Root): Deferred<BillReturn>
 
     @Headers("Content-Type: application/json")
     @POST("api/Account/Login")
@@ -241,12 +248,12 @@ interface ApiService {
 
     @Headers("Content-Type: application/json")
     @POST("api/Account/AddItem")
-    fun AddItemAPI(@Body add: AddItemModel): Deferred<Task<AddItemModel>>
+    fun AddItemAPI(@Body add: AddproductModel): Deferred<Task<AddproductModel>>
 
 
     @Headers("Content-Type: application/json")
     @POST("api/Account/EditItem")
-    fun EditItemAPI(@Body add: EditItemModel): Deferred<Task<EditItemModel>>
+    fun EditItemAPI(@Body add: EditModel): Deferred<Task<EditModel>>
 
 
     @Headers("Content-Type: application/json")
@@ -283,8 +290,32 @@ interface ApiService {
         @Query("NewAddress") NewAddress: String,
         @Query("ExistAddress") ExistAddress: String,
         @Body add: List<AddOrderModels>
-
     ): Deferred<TaskOrder>
+
+
+    //call .....
+    @Headers("Content-Type: application/json")
+    @POST("api2/AndroidReciets/SetListBill")
+    fun SetListBill(
+        @Body root: Receipts,
+        @Query("AndroidID") AndroidID: String
+    ): Deferred<BillReturn>
+
+
+    @Headers("Content-Type: application/json")
+    @GET("api2/AndroidReciets/GetReportsByDay")
+    fun GetReportsByDay(
+        @Query("AndroidID") AndroidID: String,
+        @Query("date") date: String
+    ): Deferred<ReportModel>
+
+  @Headers("Content-Type: application/json")
+    @GET("api2/AndroidReciets/GetReports")
+    fun GetReports(
+        @Query("AndroidID") AndroidID: String,
+    ): Deferred<TotalReportModel>
+
+
 
 
 }

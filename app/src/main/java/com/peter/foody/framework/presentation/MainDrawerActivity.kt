@@ -48,6 +48,7 @@ class MainDrawerActivity : AppCompatActivity() {
                 R.id.itemFragment,
                 R.id.companyDataFragment,
                 R.id.receiptsFragment,
+                R.id.POSFragment,
                 R.id.CategoryFragment
             ), drawerLayout
         )

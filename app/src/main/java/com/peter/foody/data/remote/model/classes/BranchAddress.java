@@ -2,7 +2,7 @@ package com.peter.foody.data.remote.model.classes;
 
 
 public class BranchAddress {
-    private static final String COTATION = "\"";
+
     public String country;
 
     public String governate;
@@ -39,19 +39,7 @@ public class BranchAddress {
         this.additionalInformation = additionalInformation;
     }
 
-    public String getString(){
-        String result=COTATION+"COUNTRY"+COTATION+COTATION+country+COTATION;
-        result+=COTATION +"GOVERNATE"+COTATION+COTATION+governate+COTATION;
-        result+=COTATION +"REGIONCITY"+COTATION+COTATION+regionCity+COTATION;
-        result+=COTATION+"STREET"+COTATION+COTATION+street+COTATION;
-        result+=COTATION+"BUILDINGNUMBER"+COTATION+COTATION+buildingNumber+COTATION;
-        result+=COTATION+"POSTALCODE"+COTATION+COTATION+postalCode+COTATION;
-        result+=COTATION+"FLOOR"+COTATION+COTATION+floor+COTATION;
-        result+=COTATION+"ROOM"+COTATION+COTATION+room+COTATION;
-        result+=COTATION+"LANDMARK"+COTATION+COTATION+landmark+COTATION;
-        result+=COTATION+"ADDITIONALINFORMATION"+COTATION+COTATION+additionalInformation+COTATION;
-        return result;
-    }
+
 
     public String getCountry() {
         return country;

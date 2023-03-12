@@ -14,7 +14,7 @@ package com.peter.foody.data.remote.model.classes;
         "NETWEIGHT"
 })*/
 public class Header {
-    final String COTATION = "\"";
+
 
     public String dateTimeIssued;
 
@@ -46,18 +46,5 @@ public class Header {
         this.referenceOldUUID = referenceOldUUID;
     }
 
-    public String getString(){
-        String result=COTATION+"DATETIMEISSUED"+COTATION+COTATION+dateTimeIssued+COTATION;
-        result+=COTATION+"RECEIPTNUMBER"+COTATION+COTATION+receiptNumber+COTATION;
-        result+=COTATION+"UUID"+COTATION+COTATION+uuid+COTATION;
-        result+=COTATION+"PREVIOUSUUID"+COTATION+COTATION+previousUUID+COTATION;
-        result+=COTATION+"REFERENCEOLDUUID"+COTATION+COTATION+referenceOldUUID+COTATION;
-        result+=COTATION+"CURRENCY"+COTATION+COTATION+currency+COTATION;
-        result+=COTATION+"EXCHANGERATE"+COTATION+COTATION+exchangeRate+COTATION;
-        result+=COTATION+"SORDERNAMECODE"+COTATION+COTATION+sOrderNameCode+COTATION;
-        result+=COTATION+"ORDERDELIVERYMODE"+COTATION+COTATION+orderdeliveryMode+COTATION;
-        result+=COTATION+"GROSSWEIGHT"+COTATION+COTATION+grossWeight+COTATION;
-        result+=COTATION+"NETWEIGHT"+COTATION+COTATION+netWeight+COTATION;
-        return  result;
-    }
+
 }

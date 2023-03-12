@@ -15,18 +15,11 @@ public class TaxableItem {
 
     private String taxableType;
 
-    final String COTATION = "\"";
+
     public TaxableItem(double amount, double rate) {
         this.amount = amount;
         this.rate = rate;
     }
 
-    public String getString(){
-        String result=COTATION+"TAXABLEITEMS"+COTATION;
-        result+=COTATION+"TAXTYPE"+COTATION+COTATION+taxType+COTATION;
-        result+=COTATION+"AMOUNT"+COTATION+COTATION+amount+COTATION;
-        result+=COTATION+"SUBTYPE"+COTATION+COTATION+subType+COTATION;
-        result+=COTATION+"RATE"+COTATION+COTATION+rate+COTATION;
-        return  result;
-    }
+
 }

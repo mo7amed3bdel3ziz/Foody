@@ -2,7 +2,9 @@ package com.peter.foody.business.repositories.implementation
 
 import android.util.Log
 import com.peter.foody.business.wrapWithFlowApi
+import com.peter.foody.data.remote.model.classes.Receipts
 import com.peter.foody.data.remote.model.models.AddOrderModels
+import com.peter.foody.data.remote.model.models.BillReturn
 import com.peter.foody.data.remote.model.models.TaskOrder
 import com.peter.foody.di.BavariaDataBase
 import com.peter.foody.framework.datasource.network.ApiService
@@ -57,4 +59,31 @@ class CustomerRepositoryImpl @Inject constructor(
 
         }
     ).flowOn(Dispatchers.IO)
+
+     fun setListBillRepo(root: Receipts, AndroidID: String) = wrapWithFlowApi(
+
+        fetch = {
+
+            api.SetListBill(root, AndroidID)
+
+        }
+    ).flowOn(Dispatchers.IO)
+
+
+
+//    fun setListBillRepo(root: Receipts, AndroidID: String) = flow<BillReturn> {
+//        kotlin.runCatching {
+//
+//            api.SetListBill(root,AndroidID)!!.await()
+//
+//        }.onFailure {
+//            Log.d("setCustomersDetailsRepo", "onFailure "+it.message.toString())
+//
+//        }.onSuccess {
+//            Log.d("setCustomersDetailsRepo", "onSuccess")
+//            emit(it)
+//
+//        }
+//
+//    }.flowOn(Dispatchers.IO)
 }

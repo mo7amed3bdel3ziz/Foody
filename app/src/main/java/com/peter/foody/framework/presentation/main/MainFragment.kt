@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
@@ -22,9 +23,9 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -39,10 +40,11 @@ import com.peter.foody.data.remote.model.models.ItemsModels
 import com.peter.foody.data.roomContacts.productRoom.ItemsBill
 import com.peter.foody.databinding.FragmentMainBinding
 import com.peter.foody.framework.presentation.adapters.*
+import com.peter.foody.framework.presentation.main.reports.utilShared.SharedPreferencesBillStatu
 import com.peter.foody.framework.presentation.reports.PrintPic
 import com.peter.foody.framework.presentation.ui.account.AccountViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
+import kotlinx.android.synthetic.main.fragment_main.*
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -84,6 +86,8 @@ class MainFragment : Fragment() {
     var Total = ""
     var TotalReturn = ""
     var Unpaid_deferred = ""
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -93,36 +97,37 @@ class MainFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
+        SharedPreferencesBillStatu.init(context);
+
         val macAddress =
             Settings.Secure.getString(activity!!.getContentResolver(), "android_id")
 
+        //   val d=   UploadDetlsCallRepo()
+        //  viewModel.sentRingingAction()
         binding.payBtn.setOnClickListener {
-            registerBillAndPrint("hph")
+            // registerBillAndPrint("hph")
             if (list.isEmpty() && list.size == 0) {
+                Toast.makeText(context,"الفاتورة فارغة", Toast.LENGTH_SHORT).show()
 
             } else {
-                var progressDoalog: ProgressDialog = ProgressDialog(activity)
-                progressDoalog.max = 100
-                progressDoalog.setMessage("Its loading....")
-                progressDoalog.setTitle(" جارى تسجيل الفاتوره ")
-                //    progressDoalog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                //    progressDoalog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                progressDoalog.show()
-
-                //   viewModel.setBill(SetBillModel("6", macAddress,list))
-                viewModel.ruternBill.observe(viewLifecycleOwner) {
-                    Toast.makeText(context, it.toData().toString(), Toast.LENGTH_SHORT).show()
-                    Toast.makeText(context, it.toData().toString(), Toast.LENGTH_SHORT).show()
-                    // noteeee
-                    progressDoalog.dismiss()
-
-                }
+//                var progressDoalog: ProgressDialog = ProgressDialog(activity)
+//                progressDoalog.max = 100
+//                progressDoalog.setMessage("Its loading....")
+//                progressDoalog.setTitle(" جارى تسجيل الفاتوره ")
+//                progressDoalog.show()
+                Toast.makeText(context,  "تم الدفع", Toast.LENGTH_SHORT).show()
+                viewModel.createHeader(list)
+                list.clear()
+                adapter2.notifyDataSetChanged()
+                binding.totalBalance.setText("")
             }
-
 
         }
 
-        viewModel.getCustomerDetailsVM("01015490078", 1, "732a8c1694b73f08")
+        var phoneNum = ""
+        // viewModel.sentRingingAction()
+
+       // viewModel.getCustomerDetailsVM("01015490078", 1, "732a8c1694b73f08")
         viewModel.customerDetails.observe(viewLifecycleOwner) {
             when (it) {
                 is State.Loading -> Log.d("aziz", "")
@@ -132,44 +137,56 @@ class MainFragment : Fragment() {
                     it.data
                 }
                 is State.Error -> {
-                    Log.d("azdldiza", it.toError())
+
+                    Log.d("aziz", it.toError())
                 }
             }
         }
+        var customerName = ""
+        binding.putNameID.setOnClickListener(View.OnClickListener {
 
-        AddOrderModelslist.add(  AddOrderModels(
-            29017,
-            "pizza ",
-            "6222000505368",
-            "فول ب الزيت الحار",
-            "sample string 5",
-            "2023-02-26T00:46:31.380369-07:00",
-            1,
-            64,
-            6,
-            1,
-            1,
-            1,
-            1.0,
-            "GS1",
-            "sample string 8",
-            "99999999",
-            "sample string 10",
-            "sample string 11",
-            "EA"
-        ))
-        var number =""
-       viewModel.sentRingingAction()
-        viewModel.sentRingingActionLiveData.observe(viewLifecycleOwner){
-            number=it
-            binding.saleTv.setText(number)
-            Log.d("number",number)
-        }
+            CheckNameField()
+            customerName = binding.nameEdTxt.text.toString()
 
-       // viewModel.setCustomeAddOrdersVM(number, "Yasser Hammad", 1,"732a8c1694b73f08","October","October",AddOrderModelslist )
+
+        })
+        var customerAddress = ""
+        var customerExistAddress = ""
+        binding.putAddressID.setOnClickListener(View.OnClickListener {
+
+            CheckAddressField()
+            customerAddress = binding.addressEdTxt.text.toString()
+
+        })
 
 
 
+        AddOrderModelslist.add(
+            AddOrderModels(
+                29017,
+                "pizza ",
+                "6222000505368",
+                "فول ب الزيت الحار",
+                "sample string 5",
+                "2023-02-26T00:46:31.380369-07:00",
+                1,
+                64,
+                6,
+                1,
+                1,
+                1,
+                1.0,
+                "GS1",
+                "sample string 8",
+                "99999999",
+                "sample string 10",
+                "sample string 11",
+                "EA"
+            )
+        )
+
+
+        // viewModel.setCustomeAddOrdersVM("01015490078", customerName, 1,"732a8c1694b73f08",customerAddress,customerExistAddress,AddOrderModelslist )
 
 
         viewModel.customerDetailsOrders.observe(viewLifecycleOwner) {
@@ -214,17 +231,16 @@ class MainFragment : Fragment() {
                     OnItemClickListener { parent, view, position, id ->
                         list.add(
                             ItemsModels(
-                                order.get(position).Record_ID
-                                ,order.get(position).ItemName
-                                ,order.get(position).Barcode
-                                ,order.get(position).Description
-                                ,order.get(position).Editor
-                                ,order.get(position).Date
-                                ,order.get(position).UnitType
-                                ,order.get(position).UnitType
-                                ,order.get(position).ItemCode
-                                ,order.get(position).Price
-                                ,
+                                order.get(position).Record_ID,
+                                order.get(position).ItemName,
+                                order.get(position).Barcode,
+                                order.get(position).Description,
+                                order.get(position).Editor,
+                                order.get(position).Date,
+                                order.get(position).UnitType,
+                                order.get(position).UnitType,
+                                order.get(position).ItemCode,
+                                order.get(position).Price,
                                 1
                             )
                         )
@@ -248,13 +264,13 @@ class MainFragment : Fragment() {
         viewModel.customerDetailsAddress.observe(viewLifecycleOwner) {
             address = it as ArrayList<CustomerAddress>
             binding.button2.setOnClickListener(View.OnClickListener {
-                binding.cashEditText.setText( "")
+                binding.cashEditText.setText("")
 
                 // Initialize dialog
                 var onlyAdress = ArrayList<String>()
                 for (item in address.indices) {
 
-                onlyAdress.add(address.get(item).CusAddress)
+                    onlyAdress.add(address.get(item).CusAddress)
 
                 }
                 onlyAdress
@@ -286,9 +302,11 @@ class MainFragment : Fragment() {
                     OnItemClickListener { parent, view, position, id ->
 
 
-                           binding.cashEditText.setText( adapterlist.getItem(position).toString())
+                        binding.cashEditText.setText(adapterlist.getItem(position).toString())
 
-
+                        customerAddress = adapterlist.getItem(position).toString()
+                        customerExistAddress =
+                            binding.addressEdTxt.setText(customerAddress).toString()
 
 
 
@@ -395,7 +413,7 @@ class MainFragment : Fragment() {
                     } else {
                         binding.deferredEditText.setText("")
 
- //                       var Total = binding.saleTv.text.toString().toDouble() *
+                        //                       var Total = binding.saleTv.text.toString().toDouble() *
 //                                binding.cashEditText.text.toString().toDouble()
                         binding.deferredEditText.setText(Total.toString())
                         binding.deferredEditText.setText(Total.toString())
@@ -458,9 +476,26 @@ class MainFragment : Fragment() {
 
         Log.d("ddddddddd", "s")
 
-        lifecycleScope.launch {}
-
+        //   lifecycleScope.launch {}
+        // val ss=  replaceLastChar("353541")
+        //   Log.d("replaceLastChar",ss)
         return binding.root
+    }
+
+    private fun replaceLastChar(original: String): String {
+        if (original.lastIndexOf('1')
+            > 0
+        ) {
+            val n = "N"
+            var oo = n + original
+            return oo
+        }
+
+
+//        {
+//            return original.dropLast(1) + replacement
+//        }
+        return original
     }
 
 
@@ -588,6 +623,7 @@ class MainFragment : Fragment() {
         list.clear()
 
     }
+
 
     private fun calculateBalance(list: ArrayList<ItemsModels>) {
         var totalBalance = 0.0
@@ -817,6 +853,58 @@ class MainFragment : Fragment() {
         mTextLayout.draw(c)
         c.restore()
         return b
+    }
+
+    private fun CheckNameField(): Boolean {
+        if (binding.nameEdTxt.length() == 0) {
+            binding.nameEdTxt.setError("This field is required")
+            return false
+        }
+
+        // after all validation return true.
+        return true
+    }
+
+    private fun CheckAddressField(): Boolean {
+        if (binding.addressEdTxt.length() == 0) {
+            binding.addressEdTxt.setError("This field is required")
+            return false
+        }
+
+        // after all validation return true.
+        return true
+    }
+
+
+    fun BilNum(num: String): String? {
+        var num = num
+        var lastNum = ""
+        for (i in 0 until num.length) {
+            lastNum = num[i].toString()
+        }
+        val numChar = lastNum.toInt()
+        num = if (numChar == 0) {
+            "Z$num"
+        } else if (numChar == 1) {
+            "N$num"
+        } else if (numChar == 2) {
+            "X$num"
+        } else if (numChar == 3) {
+            "M$num"
+        } else if (numChar == 4) {
+            "A$num"
+        } else if (numChar == 5) {
+            "F$num"
+        } else if (numChar == 6) {
+            "W$num"
+        } else if (numChar == 7) {
+            "R$num"
+        } else if (numChar == 8) {
+            "H$num"
+        } else {
+            "J$num"
+        }
+        return num
     }
 
 

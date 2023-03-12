@@ -1,14 +1,16 @@
 package com.peter.foody.framework.presentation.main
 
 import android.content.ContentResolver
+import android.os.Build
 import android.provider.CallLog
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hend.calldetailsrecorder.common.extensions.getPhoneNumber
-import com.hend.calldetailsrecorder.data.remote.repository.UploadDetlsCallRepo
+import com.peter.foody.data.roomContacts.HeaderBill
 import com.peter.foody.business.model.Category
 import com.peter.foody.business.model.Offer
 import com.peter.foody.business.model.Slider
@@ -21,29 +23,34 @@ import com.peter.foody.data.remote.model.classes.*
 import com.peter.foody.data.remote.model.models.*
 import com.peter.foody.data.roomContacts.AccountInfo.LoginModel
 import com.peter.foody.data.roomContacts.onlineProduct.ItemsModel
+import com.peter.foody.data.roomContacts.productRoom.ItemsBill
 import com.peter.foody.di.BavariaDataBase
-import com.peter.foody.domain.PreferencesUC
-import com.peter.foody.framework.datasource.network.ApiHelper
 import com.peter.foody.framework.datasource.responses.FoodResponse
 import com.peter.foody.framework.datasource.responses.TaskAPI
+import com.peter.foody.framework.presentation.main.reports.utilShared.SharedPreferencesBillStatu
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.io.UnsupportedEncodingException
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.text.DateFormat
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 import kotlin.experimental.and
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val repository: FoodRepository, private val customerRepositoryImpl: CustomerRepositoryImpl, private val dataBase: BavariaDataBase,
-    apiHelper: ApiHelper, preferencesUC: PreferencesUC,
-    contentResolver: ContentResolver
+    private val repository: FoodRepository,
+    private val customerRepositoryImpl: CustomerRepositoryImpl,
+    private val dataBase: BavariaDataBase
+//    contentResolver: ContentResolver
 ) : ViewModel() {
     private val _categories = MutableLiveData<List<Category>>()
     val categories: LiveData<List<Category>>
@@ -56,7 +63,6 @@ class MainViewModel @Inject constructor(
     private val _offers = MutableLiveData<List<Offer>>()
     val offers: LiveData<List<Offer>>
         get() = _offers
-
 
 
     var ruternBill = MutableLiveData<State<ModelStatMg>>()
@@ -99,6 +105,15 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun insertBill(header: HeaderBill, listOfItemsModels: ArrayList<ItemsBill>){
+        viewModelScope.launch {
+            Log.d("lxkwtorpr","insertBill")
+         // Log.d("hxiuuysxp",listOfItemsModels[0].PName)
+            dataBase.headerBillDao().insertHeaderBill(header)
+            dataBase.ItemsBillDao().insertList(listOfItemsModels)
+        }
+    }
+
 
     /**convert product from apis or any ways to ItemDatum to create uuid and root */
 
@@ -112,6 +127,7 @@ class MainViewModel @Inject constructor(
         itemType: String,
         itemCode: String
     ): ItemDatum {
+
         val numberFormat = DecimalFormat("#.00")
 
         val netSale = unitPrice * Quantity
@@ -167,41 +183,41 @@ class MainViewModel @Inject constructor(
 
 
     private var companyInfo = dataBase.loginInfoDao()
-      suspend fun getCompanyInfo(): Seller {
-          var loginModel: LoginModel
-        var sellerModel= Seller()
+    suspend fun getCompanyInfo(): Seller {
+        var loginModel: LoginModel
+        var sellerModel = Seller()
 
-       val b=  viewModelScope.async {
-              companyInfo.getContacts().collect {
-                  sellerModel=getSeller(it[0])
+        val b = viewModelScope.async {
+            companyInfo.getContacts().collect {
+                sellerModel = getSeller(it[0])
 
-                  loginModel = it[0]
-                  val branch = BranchAddress(
-                      loginModel.country,
-                      loginModel.governate,
-                      loginModel.regionCity,
-                      loginModel.street,
-                      loginModel.buildingNumber,
-                      "",
-                      "",
-                      "",
-                      "",
-                      ""
-                  )
+                loginModel = it[0]
+                val branch = BranchAddress(
+                    loginModel.country,
+                    loginModel.governate,
+                    loginModel.regionCity,
+                    loginModel.street,
+                    loginModel.buildingNumber,
+                    "",
+                    "",
+                    "",
+                    "",
+                    ""
+                )
 
-               val   sellerModesl = Seller(
-                      loginModel.tax_id.toString(),
-                      loginModel.BranchName, loginModel.branchID.toString(),
-                      branch,
-                      loginModel.posserial,
-                      "",
-                      loginModel.taxpayerActivityCode
-                  )
-              }
-           return@async sellerModel
-          }
-           return b.await()
-      }
+                val sellerModesl = Seller(
+                    loginModel.tax_id.toString(),
+                    loginModel.BranchName, loginModel.branchID.toString(),
+                    branch,
+                    loginModel.posserial,
+                    "",
+                    loginModel.taxpayerActivityCode
+                )
+            }
+            return@async sellerModel
+        }
+        return b.await()
+    }
 
 
     // Function that makes the network request, blocking the current thread
@@ -247,9 +263,9 @@ class MainViewModel @Inject constructor(
 
     // suspend
     var getItemsLiveDatas = MutableLiveData<Seller>()
-    var sellerInfo= MutableStateFlow(Seller())
+    var sellerInfo = MutableStateFlow(Seller())
 
-    private var _companyInfo = dataBase.loginInfoDao()
+      var _companyInfo = dataBase.loginInfoDao()
     fun getUserIdByEmail() {
 
         viewModelScope.launch {
@@ -268,6 +284,7 @@ class MainViewModel @Inject constructor(
                     "",
                     ""
                 )
+
                 sellerModesl = Seller(
                     loginModel.tax_id.toString(),
                     loginModel.BranchName, loginModel.branchID.toString(),
@@ -284,6 +301,103 @@ class MainViewModel @Inject constructor(
 
         }
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun createHeader(
+        listOfItemsModels: ArrayList<ItemsModels>
+    ) {
+
+     //   viewModelScope.launch {
+        Log.d("lxkwtorpr","createHeader")
+            val numberRicet = SharedPreferencesBillStatu.getInstance().numberOFBill
+            val TimeRicet = getTimeBill()
+       var      listOfItems= ArrayList<ItemsBill>()
+            val price = 0.0
+            val Tax = 0.0
+            val totalPrice = 0.0
+            val itemId = 0
+            for (ItemsModels in listOfItemsModels) {
+                Log.d("lxkwtorpr","loop")
+
+                //   Log.d("lxkwtorpr",ItemsModels.ItemName)
+                listOfItems.add(
+                    setItemsRoom(
+                        ItemsModels.Description,
+                        ItemsModels.Price,
+                        numberRicet,
+                        itemId.toString(),
+                        ItemsModels.Quantity.toDouble(),
+                        ItemsModels.UnitType,
+                        ItemsModels.ItemType,
+                        ItemsModels.ItemCode.toString(),
+                        ItemsModels.Barcode
+
+                    )
+
+                )
+
+            }
+
+
+            val url =
+                "https://preprod.invoicing.eta.gov.eg/receipts/search/a700243730510ebd8499d9d895ad7eb4ee4ba9d22b3bf155d81552f7e31dd93d";
+            //To Create New Bill in Room db
+            val headerBill = HeaderBill(
+                0,
+                numberRicet,
+                TimeRicet!!,
+                Tax, price, totalPrice, url, "S"
+
+            )
+        Log.d("lxkwtorpr",listOfItems.size.toString())
+            insertBill(headerBill,listOfItems)
+
+       // }
+
+
+    }
+
+    fun setItemsRoom(
+        nameItem: String, price: Double, ID: String, itemId: String,
+        Quantity: Double,  // double unitPrice,
+        // double totalSale,
+        // String PName,
+        // String internalCode,
+        unitType: String,
+        itemType: String,
+        itemCode: String,
+        barCode: String
+    ): ItemsBill {
+        Log.d("lxkwtorpr","setItemsRoom")
+        val bill = ItemsBill(
+            1,
+            ID,
+            itemId,
+            Quantity,
+            price,
+            nameItem,
+            itemType,
+            itemCode,
+            unitType,
+            barCode,
+
+            )
+
+
+        return bill
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    fun getTimeBill(): String? {
+
+        val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+
+        var cal = Calendar.getInstance()
+        cal = Calendar.getInstance()
+        cal.add(Calendar.HOUR, -2)
+        return dateFormat.format(cal.time).toString()
+    }
+
     fun getSeller(loginModel: LoginModel): Seller {
         var sellerModel: Seller
         val branch = BranchAddress(
@@ -309,87 +423,88 @@ class MainViewModel @Inject constructor(
 
         return sellerModel
     }
-      fun CreateUUID(
-          BillNumber: String,
-          LastUUID: String,
-          date: String,
-          list: java.util.ArrayList<ItemDatum>
-      ): String{
 
-          getUserIdByEmail()
-          var seller=  sellerInfo.value
-          //   Date df = new Date();
-          val numberFormat = DecimalFormat("#.00")
-          var TotalSale = 0.0
-          var Total = 0.0
-          for (itemData in list) {
-              TotalSale += itemData.getTotalSale()
-              Total += itemData.getTotal()
-          }
-          //itemData
-          val TaxTotal = Total - TotalSale
-          var UUID: String = ""
+    fun CreateUUID(
+        BillNumber: String,
+        LastUUID: String,
+        date: String,
+        list: java.util.ArrayList<ItemDatum>
+    ): String {
 
-          //  Date c = Calendar.getInstance().getTime();
-          //  SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
-          //  String formattedDate = df.format(c);
-          //  //   Date df = new Date("yyyy-MM-dd'T'HH:mm:ss'Z'");
-          val header = Header(
-              date,  //df,
-              BillNumber,
-              "",
-              "",
-              ""
-          )
-          val documentType = DocumentType()
+        getUserIdByEmail()
+        var seller = sellerInfo.value
+        //   Date df = new Date();
+        val numberFormat = DecimalFormat("#.00")
+        var TotalSale = 0.0
+        var Total = 0.0
+        for (itemData in list) {
+            TotalSale += itemData.getTotalSale()
+            Total += itemData.getTotal()
+        }
+        //itemData
+        val TaxTotal = Total - TotalSale
+        var UUID: String = ""
+
+        //  Date c = Calendar.getInstance().getTime();
+        //  SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
+        //  String formattedDate = df.format(c);
+        //  //   Date df = new Date("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        val header = Header(
+            date,  //df,
+            BillNumber,
+            "",
+            "",
+            ""
+        )
+        val documentType = DocumentType()
 
 
-          val buyer = Buyer(
-              "p",
-              "",
-              "",
-              "",
-              "0"
-          )
-          val extraReceiptDiscountData: java.util.ArrayList<ExtraReceiptDiscountDatum> =
-              java.util.ArrayList<ExtraReceiptDiscountDatum>()
-          extraReceiptDiscountData.add(ExtraReceiptDiscountDatum())
-          val taxTotals: java.util.ArrayList<TaxTotal> = java.util.ArrayList<TaxTotal>()
-          taxTotals.add(
-              TaxTotal(
-                  java.lang.Double.valueOf(numberFormat.format(TaxTotal)) //  TaxTotal
-              )
-          )
-          val contractor = Contractor()
-          val beneficiary = Beneficiary()
-          val r = Root(
-              header, documentType, seller,buyer, list,  //                TotalSale
-              java.lang.Double.valueOf(numberFormat.format(TotalSale)),
-              0.0,
-              0.0,
-              extraReceiptDiscountData,  //TotalSale
-              java.lang.Double.valueOf(numberFormat.format(TotalSale)),
-              0,  //                Total
-              java.lang.Double.valueOf(numberFormat.format(Total)),
-              taxTotals,
-              "C",
-              0,
-              contractor,
-              beneficiary
-          )
-          try {
-             // val g = Gson()
-             // g.toJson(r)
+        val buyer = Buyer(
+            "p",
+            "",
+            "",
+            "",
+            "0"
+        )
+        val extraReceiptDiscountData: java.util.ArrayList<ExtraReceiptDiscountDatum> =
+            java.util.ArrayList<ExtraReceiptDiscountDatum>()
+        extraReceiptDiscountData.add(ExtraReceiptDiscountDatum())
+        val taxTotals: java.util.ArrayList<TaxTotal> = java.util.ArrayList<TaxTotal>()
+        taxTotals.add(
+            TaxTotal(
+                java.lang.Double.valueOf(numberFormat.format(TaxTotal)) //  TaxTotal
+            )
+        )
+        val contractor = Contractor()
+        val beneficiary = Beneficiary()
+        val r = Root(
+            header, documentType, seller, buyer, list,  //                TotalSale
+            java.lang.Double.valueOf(numberFormat.format(TotalSale)),
+            0.0,
+            0.0,
+            extraReceiptDiscountData,  //TotalSale
+            java.lang.Double.valueOf(numberFormat.format(TotalSale)),
+            0,  //                Total
+            java.lang.Double.valueOf(numberFormat.format(Total)),
+            taxTotals,
+            "C",
+            0,
+            contractor,
+            beneficiary
+        )
+        try {
+            // val g = Gson()
+            // g.toJson(r)
             // Log.d("onSuccess", "1" + r.getString())
             // Log.d("onSuccess", "1" + g.toJson(r))
-              UUID = computeHash(r.getString())
-          } catch (e: NoSuchAlgorithmException) {
-              e.printStackTrace()
-          } catch (e: UnsupportedEncodingException) {
-              e.printStackTrace()
-          }
-          return UUID
-      }
+           // UUID = computeHash(r.getString())
+        } catch (e: NoSuchAlgorithmException) {
+            e.printStackTrace()
+        } catch (e: UnsupportedEncodingException) {
+            e.printStackTrace()
+        }
+        return UUID
+    }
 
     @Throws(NoSuchAlgorithmException::class, UnsupportedEncodingException::class)
     fun computeHash(input: String): String {
@@ -406,19 +521,28 @@ class MainViewModel @Inject constructor(
 
 
     // var setCustomeAddOrders = MutableLiveData<State<TaskOrder>>()
-    var setCustomeAddOrder = MutableLiveData <TaskOrder> ()
+    var setCustomeAddOrder = MutableLiveData<TaskOrder>()
 
-    fun setCustomeAddOrdersVM(Number:String, Name:String,
-                              ComID: Int,
-                              AndroidID: String, NewAddress: String,
-                              ExistAddress: String, add: List<AddOrderModels>
+    fun setCustomeAddOrdersVM(
+        Number: String, Name: String,
+        ComID: Int,
+        AndroidID: String, NewAddress: String,
+        ExistAddress: String, add: List<AddOrderModels>
     ) {
         viewModelScope.launch {
-            customerRepositoryImpl.seCutomersDetailsRepo(Number, Name, ComID, AndroidID, NewAddress, ExistAddress, add)
+            customerRepositoryImpl.seCutomersDetailsRepo(
+                Number,
+                Name,
+                ComID,
+                AndroidID,
+                NewAddress,
+                ExistAddress,
+                add
+            )
                 .collect {
 
                     Log.d("setCustomeAddOrders", it.Order)
-                    setCustomeAddOrder .value =it
+                    setCustomeAddOrder.value = it
 
                 }
         }
@@ -436,16 +560,16 @@ class MainViewModel @Inject constructor(
             customerRepositoryImpl.getCustomerDetailsRepo(Number, ComID, AndroidID)
 
                 .collect {
-                    when(it){
+                    when (it) {
                         is State.Loading -> {
 
                         }
                         is State.Success -> {
-                            customerDetailsOrders.value =it.data.data.CustomerOrders
-                            customerDetailsAddress.value =it.data.data.CustomerAddress
+                            customerDetailsOrders.value = it.data.data.CustomerOrders
+                            customerDetailsAddress.value = it.data.data.CustomerAddress
 
                         }
-                        is State.Error ->{
+                        is State.Error -> {
 
                         }
                     }
@@ -463,46 +587,8 @@ class MainViewModel @Inject constructor(
                 }
         }
     }
-    private var contentResolver:ContentResolver? = null
 
-    init {
 
-        this.contentResolver = contentResolver
-    }
 
-    var sentRingingActionLiveData = MutableLiveData<String>()
-
-   fun sentRingingAction() {
-        val number = contentResolver!!.getPhoneNumber()
-        Log.d("isEnteredRunning","number"+"getPhoneNumber");
-        val uri = CallLog.Calls.CONTENT_URI
-        Log.d("isEnteredRunning", contentResolver!!.getType(uri)+"getPhoneNumber");
-
-        GlobalScope.launch {
-            Dispatchers.IO
-            val number = contentResolver!!.getPhoneNumber()
-            Log.d("isEnteredRoneNumber",number+"getPhoneNumber");
-            sentRingingActionLiveData.value=number
-            Log.i("test","contentResolver + number = $number")
-            //  val response: CallResponse? = mApiHelper?.sentRingingAction(KEY, number)
-            //  preferencesUC?.saveRingCallId(response!!.ringCallId)
-            //  preferencesUC?.saveStatus(response!!.status)
-            //  Log.i(
-            //      "test", "sentRingingAction ringId = ${preferencesUC!!.getRingCallId()}" +
-            //              "status = ${preferencesUC!!.getStatus()} response = $response"
-            //  )
-        }
-
-    }
-
- // private val uploadDetlsCallRepo = UploadDetlsCallRepo(apiHelper, preferencesUC,contentResolver)
- // fun sentRingingAction() {
- //     GlobalScope.launch {
- //         Dispatchers.IO
- //         uploadDetlsCallRepo.sentRingingAction()
- //
- //     }
-
- // }
 }
 

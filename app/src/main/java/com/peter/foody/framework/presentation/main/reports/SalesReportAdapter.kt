@@ -9,9 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.peter.foody.R
 import com.peter.foody.business.model.reports.SalesReport
 import com.peter.foody.databinding.BillRowBinding
+import com.peter.foody.framework.presentation.reports.DataModel
 
 class SalesReportAdapter (val onReportClickListener: OnReportClickListener) :
-    ListAdapter<SalesReport, ReportViewHolder>(DiffCallback) {
+    ListAdapter<DataModel, ReportViewHolder>(DiffCallback) {
 
     //onReportClickListener
 
@@ -33,25 +34,25 @@ class SalesReportAdapter (val onReportClickListener: OnReportClickListener) :
 
     }
 
-    companion object DiffCallback : DiffUtil.ItemCallback<SalesReport>() {
-        override fun areItemsTheSame(oldItem: SalesReport, newItem: SalesReport): Boolean {
+    companion object DiffCallback : DiffUtil.ItemCallback<DataModel>() {
+        override fun areItemsTheSame(oldItem: DataModel, newItem: DataModel): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: SalesReport, newItem: SalesReport): Boolean {
-            return oldItem.totalQty  == newItem.totalQty
+        override fun areContentsTheSame(oldItem: DataModel, newItem: DataModel): Boolean {
+            return oldItem.Quantity  == newItem.Quantity
         }
     }
 }
 
 class ReportViewHolder(private var binding: BillRowBinding) :
     RecyclerView.ViewHolder(binding.root) {
-    fun bind(salesReport: SalesReport) {
-        binding.salesReport = salesReport
+    fun bind(dataModel: DataModel) {
+        binding.data = dataModel
         binding.executePendingBindings()
     }
 }
 
 class OnReportClickListener(val clickListener: (position: Int) -> Unit) {
-    fun onClick(Category: SalesReport, position: Int) = clickListener(position)
+    fun onClick(Category: DataModel, position: Int) = clickListener(position)
 }

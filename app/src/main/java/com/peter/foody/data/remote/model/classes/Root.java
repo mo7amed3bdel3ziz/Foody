@@ -42,7 +42,7 @@ public class Root {
     public Beneficiary beneficiary;
 
 
-    public final String COTATION = "\"";
+
 
     public Root() {
     }
@@ -69,35 +69,5 @@ public class Root {
 
 
 
-    public String getString(){
-        String result=COTATION+"HEADER"+COTATION+header.getString();
-        result+=COTATION+"DOCUMENTTYPE"+COTATION+documentType.getString();
-        result+=COTATION+"SELLER"+COTATION+seller.getString();
-        result+=COTATION+"BUYER"+COTATION+buyer.getString();
-        result+=COTATION+"ITEMDATA"+COTATION;
-        for (ItemDatum itemDatum : itemData) {
-            result+=itemDatum.getString();
-        }
-        result+=COTATION+"TOTALSALES"+COTATION+COTATION+totalSales+COTATION;
-        result+=COTATION+"TOTALCOMMERCIALDISCOUNT"+COTATION+COTATION+totalCommercialDiscount+COTATION;
-        result+=COTATION+"TOTALITEMSDISCOUNT"+COTATION+COTATION+totalItemsDiscount+COTATION;
-        result+=COTATION+"EXTRARECEIPTDISCOUNTDATA"+COTATION;
-        for (ExtraReceiptDiscountDatum itemDatum : extraReceiptDiscountData) {
-            result+=itemDatum.getString();
-        }
-        result+=COTATION+"NETAMOUNT"+COTATION+COTATION+netAmount+COTATION;
-        result+=COTATION+"FEESAMOUNT"+COTATION+COTATION+feesAmount+COTATION;
-        result+=COTATION+"TOTALAMOUNT"+COTATION+COTATION+totalAmount+COTATION;
-        result+=COTATION+"TAXTOTALS"+COTATION;
-        for (TaxTotal itemDatum : taxTotals) {
-            result+=itemDatum.getString();
-        }
-        result+=COTATION+"PAYMENTMETHOD"+COTATION+COTATION+paymentMethod+COTATION;
-        result+=COTATION+"ADJUSTMENT"+COTATION+COTATION+adjustment+COTATION;
-        result+=COTATION+"CONTRACTOR"+COTATION+contractor.getString();
-        result+=COTATION+"BENEFICIARY"+COTATION+beneficiary.getString();
 
-
-        return  result;
-    }
 }

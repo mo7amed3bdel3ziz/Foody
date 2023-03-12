@@ -59,6 +59,16 @@
         android:name="com.peter.foody.framework.presentation.ui.receipts.receiptsFragment"
         android:label=" ارسال الايصال"
         tools:layout="@layout/fragment_receipts" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.peter.foody.framework.presentation.ui.home.homeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/POSFragment"
+        android:name="com.peter.foody.POSFragment"
+        android:label="fragment_p_o_s"
+        tools:layout="@layout/fragment_p_o_s" />
 
 
 </navigation>

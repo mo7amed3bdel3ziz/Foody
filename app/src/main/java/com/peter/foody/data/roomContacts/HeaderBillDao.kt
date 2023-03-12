@@ -1,20 +1,21 @@
-package com.hend.calldetailsrecorder.data.roomContacts
+package com.peter.foody.data.roomContacts
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.peter.foody.data.roomContacts.HeaderBill
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 
 interface HeaderBillDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertHeaderBill(user: HeaderBill?)
+    suspend fun insertHeaderBill(user: HeaderBill?)
 
 
     @Query("select*from HeaderBill")
-    fun getHeaderBill(): Flow<List<HeaderBill?>?>?
+    fun getHeaderBill(): Flow<List<HeaderBill>>
 
     @Query("Select * from HeaderBill  WHERE BillNumber= :invoiceType")
     fun getBillNumber(invoiceType: String?): Flow<List<HeaderBill?>?>?
